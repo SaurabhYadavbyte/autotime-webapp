@@ -1,6 +1,7 @@
 import pytest
 from models import db, Teacher, TeacherLeave, Timetable, Subject, Course, Institute
-from datetime import datetime, timedelta
+from datetime import timedelta
+from utils.helpers import get_local_date
 
 
 def setup_test_data(app):
@@ -78,7 +79,8 @@ def setup_test_data(app):
         )
         db.session.add_all([s1, s2])
 
-        target_date = datetime(2026, 8, 31).date()  # Monday
+        today = get_local_date()
+        target_date = today + timedelta(days=(0 - today.weekday()) % 7 or 7)
 
         # Add master timetable entry for Alice on Monday
         lec = Timetable(

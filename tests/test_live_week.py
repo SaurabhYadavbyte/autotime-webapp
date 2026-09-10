@@ -2,6 +2,7 @@ import pytest
 from datetime import date, timedelta
 from utils.timetable_adapter import get_live_week_timetable
 from models import Timetable, Teacher, TeacherLeave, db, Notification
+from utils.helpers import get_local_date
 from utils.leave_service import cancel_leave
 
 def test_a_current_week_auto_resolution(app):
@@ -86,6 +87,9 @@ def test_e_real_revoke_integration(app):
     Test E — Real Revoke Integration
     """
     with app.app_context():
+        today = get_local_date()
+        ref_date = today + timedelta(days=(2 - today.weekday()) % 7 or 7)
+
         # 1. Setup Master
         t_master = Timetable(institute_code="TEST01", class_id="FYCS-A", day_name="Wed", start_time="10:00 AM", end_time="11:00 AM", subject_name="DBMS", teacher_name="Teacher A", is_proxy=False)
 
@@ -94,16 +98,14 @@ def test_e_real_revoke_integration(app):
         teacher_b = Teacher(institute_code="TEST01", teacher_id="T02", name="Teacher B", email="b@test.com", departments="CS", available_days="Mon,Tue,Wed,Thu,Fri,Sat", max_hours=10)
 
         # 2. Approved leave for Teacher A
-        leave = TeacherLeave(institute_code="TEST01", teacher_id="T01", date=date(2026, 9, 9), status="Approved")
+        leave = TeacherLeave(institute_code="TEST01", teacher_id="T01", date=ref_date, status="Approved")
         db.session.add_all([t_master, teacher_a, teacher_b, leave])
         db.session.commit()
 
         # 3. Proxy linked to leave
-        t_override = Timetable(institute_code="TEST01", class_id="FYCS-A", day_name="Wed", start_time="10:00 AM", end_time="11:00 AM", subject_name="DBMS", teacher_name="Teacher B", is_proxy=True, specific_date=date(2026, 9, 9), leave_id=leave.id)
+        t_override = Timetable(institute_code="TEST01", class_id="FYCS-A", day_name="Wed", start_time="10:00 AM", end_time="11:00 AM", subject_name="DBMS", teacher_name="Teacher B", is_proxy=True, specific_date=ref_date, leave_id=leave.id)
         db.session.add(t_override)
         db.session.commit()
-
-        ref_date = date(2026, 9, 9)
 
         # Verify Live Week BEFORE revoke
         live_week_before = get_live_week_timetable("TEST01", reference_date=ref_date, filters={"class_id": "FYCS-A"})
@@ -222,4 +224,3 @@ def test_i_practical_block(app):
 
         assert r1.teacher_name == "Teacher D"
         assert r2.teacher_name == "Teacher D"
-
