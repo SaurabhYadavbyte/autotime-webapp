@@ -35,8 +35,8 @@ class GlobalState:
         default_factory=dict
     )  # class_id -> day -> set of slot idx
 
-    # Workload tracking
-    teacher_hours: Dict[str, int] = field(default_factory=dict)  # teacher_id -> hours
+    # Workload tracking. Legacy "hours" names count teaching periods, not clock hours.
+    teacher_hours: Dict[str, int] = field(default_factory=dict)
     teacher_max_hours: Dict[str, int] = field(default_factory=dict)
     teacher_available_days: Dict[str, Set[str]] = field(
         default_factory=dict

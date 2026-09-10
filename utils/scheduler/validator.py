@@ -23,6 +23,9 @@ class TimetableValidator:
         class_schedule = {}  # class_id -> day -> set of indices
         teacher_workload = {}  # teacher_id -> total_hours
         seen_unit_ids = set()
+        valid_slot_indices = {slot.idx for slot in time_slots}
+        required_by_subject_class = {}
+        scheduled_by_subject_class = {}
 
         # Group by session_group_id to check shared logic if applicable
         # Actually in this model, SessionOccurrence itself can have multiple target_classes.
@@ -33,6 +36,19 @@ class TimetableValidator:
             if unit.id in seen_unit_ids:
                 errors.append(f"Hard Constraint Violation: Duplicate logical occurrence '{unit.id}' detected.")
             seen_unit_ids.add(unit.id)
+
+            required_periods = getattr(unit, "required_periods", None)
+            if required_periods is not None:
+                for c_id in unit.target_classes:
+                    key = (unit.subject_id, c_id)
+                    previous = required_by_subject_class.setdefault(
+                        key, (unit.subject_name, required_periods)
+                    )
+                    if previous[1] != required_periods:
+                        errors.append(
+                            "Hard Constraint Violation: inconsistent required periods "
+                            f"for {unit.subject_name} and class {c_id}."
+                        )
 
             if not unit.assigned_slot:
                 errors.append(
@@ -46,13 +62,29 @@ class TimetableValidator:
             if day not in working_days:
                 errors.append(f"Hard Constraint Violation: {unit.subject_name} assigned to {day}, which is not a configured working day.")
 
+            if unit.preferred_days and day not in unit.preferred_days:
+                errors.append(
+                    f"Hard Constraint Violation: {unit.subject_name} assigned to {day}, "
+                    "which is outside its preferred-day restriction."
+                )
+
+            if not unit.target_classes:
+                errors.append(
+                    f"Hard Constraint Violation: {unit.subject_name} has no target class."
+                )
+
             # Continuity / Bounds / Lunch
-            if start_idx < 0 or start_idx + unit.duration > len(time_slots):
+            occupied_indices = range(start_idx, start_idx + unit.duration)
+            if (
+                start_idx < 0
+                or unit.duration < 1
+                or any(idx not in valid_slot_indices for idx in occupied_indices)
+            ):
                 errors.append(f"Hard Constraint Violation: {unit.subject_name} exceeds day bounds.")
                 continue
 
             if unit.duration > 1:
-                # Practical continuity crossing lunch boundary
+                # Multi-period continuity across the lunch boundary is prohibited.
                 if start_idx < lunch_after and (start_idx + unit.duration) > lunch_after:
                     errors.append(f"Hard Constraint Violation: {unit.subject_name} (duration {unit.duration}) crosses the lunch boundary at period {lunch_after}.")
 
@@ -89,10 +121,26 @@ class TimetableValidator:
                         )
                     class_schedule.setdefault(c_id, {}).setdefault(day, set()).add(idx)
 
+            if required_periods is not None:
+                for c_id in unit.target_classes:
+                    key = (unit.subject_id, c_id)
+                    scheduled_by_subject_class[key] = (
+                        scheduled_by_subject_class.get(key, 0) + unit.duration
+                    )
+
         # Second pass: Check workload
         for t_id, hours in teacher_workload.items():
             if t_id in teacher_max_hours:
                 if hours > teacher_max_hours[t_id]:
                     errors.append(f"Hard Constraint Violation: Teacher {t_id} exceeds max workload ({hours} > {teacher_max_hours[t_id]}).")
+
+        for key, (subject_name, required_periods) in required_by_subject_class.items():
+            scheduled_periods = scheduled_by_subject_class.get(key, 0)
+            if scheduled_periods != required_periods:
+                errors.append(
+                    "Hard Constraint Violation: "
+                    f"{subject_name} for class {key[1]} requires {required_periods} periods "
+                    f"but has {scheduled_periods}."
+                )
 
         return len(errors) == 0, errors

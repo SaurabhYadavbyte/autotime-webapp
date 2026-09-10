@@ -54,6 +54,9 @@ def engine_generate_timetable(inst_code):
             state.teacher_available_days[t.teacher_id] = set(days)
 
     units = []
+    invalid_requirements = []
+    original_required_periods = 0
+    original_required_class_periods = 0
 
     for sub in subjects:
         # Determine target classes
@@ -70,9 +73,23 @@ def engine_generate_timetable(inst_code):
 
         is_prac = sub.subject_type and sub.subject_type.lower() == "practical"
 
-        # Determine how many sessions to create based on required_hours and session_length
-        session_len = sub.session_length if sub.session_length else 1
-        num_sessions = sub.required_hours // session_len
+        # Weekly "hours" are teaching periods. Existing input rules require each
+        # subject to be composed of full, fixed-length sessions.
+        required_periods = sub.required_hours
+        session_len = sub.session_length if sub.session_length is not None else 1
+        if required_periods is not None and required_periods > 0:
+            original_required_periods += required_periods
+            original_required_class_periods += required_periods * len(target_classes)
+        if (
+            required_periods is None
+            or required_periods <= 0
+            or session_len <= 0
+            or required_periods % session_len
+        ):
+            invalid_requirements.append(sub)
+            continue
+
+        num_sessions = required_periods // session_len
 
         for i in range(num_sessions):
             unit = SessionOccurrence(
@@ -85,10 +102,50 @@ def engine_generate_timetable(inst_code):
                 preferred_days=pref_days,
                 is_practical=is_prac,
             )
+            # Adapter metadata lets the independent validator compare generated
+            # occurrences with the source requirement without changing the
+            # public SessionOccurrence constructor.
+            unit.required_periods = required_periods
             units.append(unit)
 
-    engine = TimetableEngine(time_slots=time_slots, days=days, lunch_after=schedule_config.lunch_after)
-    success, scheduled_units, msg, stats, diag = engine.generate(units, state)
+    if invalid_requirements:
+        from utils.scheduler.diagnostics import GenerationDiagnostics, ReasonCodes
+
+        affected_subjects = [subject.subject_name for subject in invalid_requirements]
+        msg = (
+            "Invalid weekly period requirement: required_hours must be positive and "
+            "divisible by session_length."
+        )
+        stats = {
+            "feasibility_time": 0.0,
+            "optimization_time": 0.0,
+            "validation_time": 0.0,
+            "total_time": 0.0,
+            "total_sessions": 0,
+            "required_periods": original_required_periods,
+            "scheduled_periods": 0,
+            "required_class_periods": original_required_class_periods,
+            "scheduled_class_periods": 0,
+        }
+        diag = GenerationDiagnostics(
+            status="FAILED",
+            reason_code=ReasonCodes.INVALID_SUBJECT_REQUIREMENT,
+            primary_bottleneck=msg,
+            affected_subjects=affected_subjects,
+            suggestions=[
+                "Set each subject's required weekly periods to a positive multiple of its session length."
+            ],
+            statistics={"invalid_subject_count": len(invalid_requirements)},
+        )
+        success = False
+        scheduled_units = []
+    else:
+        engine = TimetableEngine(
+            time_slots=time_slots,
+            days=days,
+            lunch_after=schedule_config.lunch_after,
+        )
+        success, scheduled_units, msg, stats, diag = engine.generate(units, state)
 
     if success:
         # Validate
