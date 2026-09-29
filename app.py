@@ -47,7 +47,7 @@ def create_app(test_config=None):
             db_url = db_url.replace("postgres://", "postgresql://", 1)
         app.config["SQLALCHEMY_DATABASE_URI"] = db_url
         app.config["AUTO_CREATE_SCHEMA"] = _environment_flag(
-            "AUTO_CREATE_SCHEMA", default=db_url.startswith("sqlite:")
+            "AUTO_CREATE_SCHEMA", default=True
         )
     else:
         app.config.update(test_config)

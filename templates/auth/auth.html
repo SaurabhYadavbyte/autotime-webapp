@@ -84,7 +84,7 @@
 
                         <!-- ADMIN TAB -->
                         <div class="tab-pane fade show active" id="admin" role="tabpanel">
-                            <form action="/login_admin" method="POST">
+                            <form action="/login_admin" method="POST">                                <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
                                 <div class="mb-3">
                                     <label class="form-label fw-bold">Username</label>
                                     <div class="input-group">
@@ -111,7 +111,7 @@
 
                         <!-- TEACHER TAB -->
                         <div class="tab-pane fade" id="teacher" role="tabpanel">
-                            <form action="/login_teacher" method="POST">
+                            <form action="/login_teacher" method="POST">                                <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
                                 <div class="mb-3">
                                     <label class="form-label fw-bold">Email Address</label>
                                     <div class="input-group">
@@ -138,7 +138,7 @@
 
                         <!-- STUDENT TAB -->
                         <div class="tab-pane fade" id="student" role="tabpanel">
-                            <form action="/login_student" method="POST">
+                            <form action="/login_student" method="POST">                                <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
                                 <div class="mb-3">
                                     <label class="form-label fw-bold">Email Address</label>
                                     <div class="input-group">
