@@ -61,6 +61,13 @@ def create_app(test_config=None):
                 db.create_all()
             except Exception as e:
                 print(f"Error creating schema: {e}")
+                
+            try:
+                from sqlalchemy import text
+                db.session.execute(text("ALTER TABLE teacher ADD COLUMN subjects VARCHAR(500)"))
+                db.session.commit()
+            except Exception:
+                db.session.rollback()
 
     app.register_blueprint(main_bp)
 
