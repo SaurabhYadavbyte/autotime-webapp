@@ -61,27 +61,7 @@ def create_app(test_config=None):
                 db.create_all()
             except Exception as e:
                 print(f"Error creating schema: {e}")
-                
-            try:
-                from sqlalchemy import text
-                db.session.execute(text("ALTER TABLE teacher ADD COLUMN subjects VARCHAR(500)"))
-                db.session.commit()
-            except Exception:
-                db.session.rollback()
-                
-            # Auto-populate subjects for existing teachers based on assigned subjects
-            try:
-                from models import Teacher, Subject
-                teachers = Teacher.query.filter((Teacher.subjects == None) | (Teacher.subjects == "")).all()
-                for t in teachers:
-                    assigned_subs = Subject.query.filter_by(institute_code=t.institute_code, teacher_id=t.teacher_id).all()
-                    if assigned_subs:
-                        sub_names = sorted(list(set([s.subject_name for s in assigned_subs])))
-                        t.subjects = ", ".join(sub_names)
-                db.session.commit()
-            except Exception as e:
-                db.session.rollback()
-                print(f"Data migration error: {e}")
+
 
     app.register_blueprint(main_bp)
 

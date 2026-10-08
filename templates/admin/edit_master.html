@@ -133,33 +133,52 @@
         const subjectNameInput = document.getElementById('subject_name_input');
         const assignTeacherSelect = document.getElementById('assign_teacher_select');
         if (subjectNameInput && assignTeacherSelect) {
-            const allTeacherOptions = Array.from(assignTeacherSelect.options).slice(1);
+            const allTeacherOptions = Array.from(assignTeacherSelect.options).slice(1).map(opt => ({
+                value: opt.value,
+                text: opt.text,
+                subjects: (opt.getAttribute('data-subjects') || '').toLowerCase()
+            }));
             
-            subjectNameInput.addEventListener('input', function() {
-                const typedSubject = this.value.trim().toLowerCase();
+            function filterTeachers() {
+                const typedSubject = subjectNameInput.value.trim().toLowerCase();
+                const ts = assignTeacherSelect.tomselect;
                 
-                const currentVal = assignTeacherSelect.value;
-                assignTeacherSelect.innerHTML = '';
-                const placeholderOpt = document.createElement('option');
-                placeholderOpt.value = "";
-                placeholderOpt.textContent = "Select Teacher...";
-                placeholderOpt.disabled = true;
-                assignTeacherSelect.appendChild(placeholderOpt);
-                
-                allTeacherOptions.forEach(opt => {
-                    const teacherSubjects = (opt.getAttribute('data-subjects') || '').toLowerCase();
-                    if (!typedSubject || teacherSubjects.includes(typedSubject)) {
-                        assignTeacherSelect.appendChild(opt.cloneNode(true));
-                    }
-                });
-                
-                // try to keep previous selection if it's still valid
-                if (currentVal) {
-                    assignTeacherSelect.value = currentVal;
+                if (ts) {
+                    const currentVal = ts.getValue();
+                    ts.clear();
+                    ts.clearOptions();
+                    
+                    allTeacherOptions.forEach(opt => {
+                        if (!typedSubject || opt.subjects.includes(typedSubject)) {
+                            ts.addOption({value: opt.value, text: opt.text});
+                        }
+                    });
+                    ts.refreshOptions(false);
+                    if (currentVal) ts.setValue(currentVal);
+                } else {
+                    const currentVal = assignTeacherSelect.value;
+                    assignTeacherSelect.innerHTML = '';
+                    const placeholderOpt = document.createElement('option');
+                    placeholderOpt.value = "";
+                    placeholderOpt.textContent = "Select Teacher...";
+                    placeholderOpt.disabled = true;
+                    assignTeacherSelect.appendChild(placeholderOpt);
+                    
+                    allTeacherOptions.forEach(opt => {
+                        if (!typedSubject || opt.subjects.includes(typedSubject)) {
+                            const newOpt = document.createElement('option');
+                            newOpt.value = opt.value;
+                            newOpt.textContent = opt.text;
+                            newOpt.setAttribute('data-subjects', opt.subjects);
+                            assignTeacherSelect.appendChild(newOpt);
+                        }
+                    });
+                    if (currentVal) assignTeacherSelect.value = currentVal;
                 }
-            });
-            // trigger once on load to filter based on initial value
-            subjectNameInput.dispatchEvent(new Event('input'));
+            }
+            
+            subjectNameInput.addEventListener('input', filterTeachers);
+            setTimeout(filterTeachers, 200);
         }
     });
 </script>
