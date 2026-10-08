@@ -1,0 +1,34 @@
+@startuml
+title Sequence — leave approval and live timetable
+hide footbox
+skinparam backgroundColor white
+skinparam sequenceMessageAlign center
+participant "Teacher browser" as P0
+participant "Flask routes" as P1
+participant "Admin browser" as P2
+participant "Leave / proxy modules" as P3
+participant "Database" as P4
+P0 -> P1: POST /apply_leave + form / CSRF
+P1 -> P4: Create Pending leave + admin notification; commit
+P1 --> P0: Redirect to teacher dashboard
+P2 -> P1: POST /admin/approve_leave/<leave_id>
+P1 -> P3: approve_leave(leave_id, institute_code)
+P3 -> P4: Load Pending leave; stage Approved status
+P3 -> P4: Read affected master blocks, teachers and workload
+P4 --> P3: Session blocks and candidate information
+loop [for every affected session block]
+P3 -> P3: find_best_proxy(...)
+alt [eligible proxy found]
+P3 -> P4: Stage dated proxy rows + teacher notification
+else [no eligible proxy]
+P3 -> P4: Stage dated __UNCOVERED__ rows
+end
+end
+P3 -> P4: Commit approved leave and all overrides
+P3 --> P1: Success / message (rollback on exception)
+P1 --> P2: Redirect to leave requests
+P0 -> P1: GET /teacher_dash
+P1 -> P4: Read master and current-week dated entries
+P4 --> P1: Rows for effective schedule merge
+P1 --> P0: Rendered Live Week timetable
+@enduml

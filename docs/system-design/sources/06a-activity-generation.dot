@@ -1,0 +1,36 @@
+digraph G {
+graph [rankdir=TB, bgcolor="white", pad="0.35", nodesep="0.48", ranksep="0.68", fontname="Arial", fontsize=22, fontcolor="#142d4e", labelloc=t, label="Activity diagram — generate a master timetable", splines=polyline];
+node [shape=box, style="rounded,filled", fillcolor="#f0f6fc", color="#53769d", fontname="Arial", fontsize=13, fontcolor="#173454", margin="0.18,0.12", penwidth=1.2];
+edge [fontname="Arial", fontsize=10, color="#637991", fontcolor="#344e68", arrowsize=0.7, penwidth=1.1];
+
+ start [shape=circle,label="",style=filled,fillcolor="#173454",width=0.2]; end [shape=doublecircle,label="",style=filled,fillcolor="#173454",width=0.2];
+ auth [label="Validate admin session
+and CSRF token"];
+ load [label="Load institute, subjects, teachers,
+courses and schedule settings"];
+ construct [label="Build periods and session occurrences"];
+ valid [shape=diamond,label="Requirements
+valid?"];
+ solve [label="Presolve capacity; construct candidates;
+search feasible assignment"];
+ found [shape=diamond,label="Feasible
+assignment?"];
+ optimize [label="Optimize gaps / balance;
+run engine validation"];
+ audit [label="Independent adapter audit"];
+ passed [shape=diamond,label="All constraints
+satisfied?"];
+ failure [label="Prepare failure diagnostics;
+preserve existing master",fillcolor="#fff1dc"];
+ replace [label="Stage replacement of master rows only
+(specific_date IS NULL)",fillcolor="#e6f5ed"];
+ history [label="Add generation history
+and commit transaction"];
+ respond [label="Return JSON result to browser"];
+ start -> auth -> load -> construct -> valid;
+ valid -> solve [label="[yes]"]; valid -> failure [label="[no]"];
+ solve -> found; found -> optimize [label="[yes]"]; found -> failure [label="[no / timeout]"];
+ optimize -> audit -> passed; passed -> replace [label="[yes]"]; passed -> failure [label="[no]"];
+ replace -> history; failure -> history; history -> respond -> end;
+ 
+}

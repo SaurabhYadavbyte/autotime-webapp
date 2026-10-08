@@ -45,6 +45,10 @@
                             <datalist id="deptOpts">{% for d in unique_depts %}<option value="{{ d }}">{% endfor %}</datalist>
                         </div>
                         <div class="mb-3">
+                            <label class="form-label">Subjects Taught</label>
+                            <input type="text" class="form-control" name="subjects" value="{{ item.subjects or '' }}" placeholder="Comma-separated e.g. Math, Physics">
+                        </div>
+                        <div class="mb-3">
                             <label class="form-label">Available Days</label>
                             <div class="d-flex flex-wrap gap-2 p-2 bg-white border rounded">
                                 {% for day in ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'] %}
@@ -60,7 +64,7 @@
                         <!-- SUBJECT FIELDS -->
                         <div class="row g-2">
                             <div class="col-4 mb-3"><label class="form-label">Sub Code</label><input type="text" class="form-control" name="subject_code" value="{{ item.subject_code }}" required></div>
-                            <div class="col-8 mb-3"><label class="form-label">Subject Name</label><input type="text" class="form-control" name="subject_name" value="{{ item.subject_name }}" required></div>
+                            <div class="col-8 mb-3"><label class="form-label">Subject Name</label><input type="text" class="form-control" id="subject_name_input" name="subject_name" value="{{ item.subject_name }}" required></div>
                         </div>
                         <div class="mb-3">
                             <label class="form-label">Assigned Classes <small class="text-muted">(Current: {{ item.class_id }})</small></label>
@@ -70,9 +74,9 @@
                         </div>
                         <div class="mb-3">
                             <label class="form-label">Assigned Teacher</label>
-                            <select class="form-select searchable-select" name="teacher_id" required>
+                            <select class="form-select searchable-select" id="assign_teacher_select" name="teacher_id" required>
                                 <option value="{{ item.teacher_id }}" selected>Current: {{ item.teacher_id }}</option>
-                                {% for teacher in teachers %}<option value="{{ teacher.teacher_id }}">{{ teacher.name }} ({{ teacher.teacher_id }})</option>{% endfor %}
+                                {% for teacher in teachers %}<option value="{{ teacher.teacher_id }}" data-subjects="{{ teacher.subjects or '' }}">{{ teacher.name }} ({{ teacher.teacher_id }})</option>{% endfor %}
                             </select>
                         </div>
                         <div class="row g-2">
@@ -124,4 +128,39 @@
         </div>
     </div>
 </div>
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const subjectNameInput = document.getElementById('subject_name_input');
+        const assignTeacherSelect = document.getElementById('assign_teacher_select');
+        if (subjectNameInput && assignTeacherSelect) {
+            const allTeacherOptions = Array.from(assignTeacherSelect.options).slice(1);
+            
+            subjectNameInput.addEventListener('input', function() {
+                const typedSubject = this.value.trim().toLowerCase();
+                
+                const currentVal = assignTeacherSelect.value;
+                assignTeacherSelect.innerHTML = '';
+                const placeholderOpt = document.createElement('option');
+                placeholderOpt.value = "";
+                placeholderOpt.textContent = "Select Teacher...";
+                placeholderOpt.disabled = true;
+                assignTeacherSelect.appendChild(placeholderOpt);
+                
+                allTeacherOptions.forEach(opt => {
+                    const teacherSubjects = (opt.getAttribute('data-subjects') || '').toLowerCase();
+                    if (!typedSubject || teacherSubjects.includes(typedSubject)) {
+                        assignTeacherSelect.appendChild(opt.cloneNode(true));
+                    }
+                });
+                
+                // try to keep previous selection if it's still valid
+                if (currentVal) {
+                    assignTeacherSelect.value = currentVal;
+                }
+            });
+            // trigger once on load to filter based on initial value
+            subjectNameInput.dispatchEvent(new Event('input'));
+        }
+    });
+</script>
 {% endblock %}

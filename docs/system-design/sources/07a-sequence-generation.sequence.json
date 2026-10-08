@@ -1,0 +1,100 @@
+{
+  "title": "Sequence — generate timetable",
+  "actors": [
+    "Admin browser",
+    "Flask route",
+    "Timetable adapter",
+    "Engine / validator",
+    "Database"
+  ],
+  "steps": [
+    {
+      "from": 0,
+      "to": 1,
+      "text": "POST /api/generate_timetable + session / CSRF"
+    },
+    {
+      "from": 1,
+      "to": 1,
+      "text": "Check CSRF and admin session"
+    },
+    {
+      "from": 1,
+      "to": 2,
+      "text": "engine_generate_timetable(institute_code)"
+    },
+    {
+      "from": 2,
+      "to": 4,
+      "text": "Read institute, subjects, teachers, courses, settings"
+    },
+    {
+      "from": 4,
+      "to": 2,
+      "text": "Academic data and constraints",
+      "reply": true
+    },
+    {
+      "from": 2,
+      "to": 2,
+      "text": "Build time slots and session occurrences"
+    },
+    {
+      "from": 2,
+      "to": 3,
+      "text": "generate(units, state)",
+      "note": "Only when weekly requirements are valid"
+    },
+    {
+      "from": 3,
+      "to": 2,
+      "text": "success, schedule, message, stats, diagnostics",
+      "reply": true
+    },
+    {
+      "from": 2,
+      "to": 3,
+      "text": "TimetableValidator.audit(...)",
+      "note": "Only after engine success"
+    },
+    {
+      "from": 3,
+      "to": 2,
+      "text": "Audit result / errors",
+      "reply": true
+    },
+    {
+      "frame": "alt",
+      "text": "[generation and audit succeed]"
+    },
+    {
+      "from": 2,
+      "to": 4,
+      "text": "Replace master rows; add SUCCESS history; commit"
+    },
+    {
+      "branch": "[requirements / generation / audit fail]"
+    },
+    {
+      "from": 2,
+      "to": 4,
+      "text": "Keep master; add FAILED history; commit"
+    },
+    {
+      "end": true
+    },
+    {
+      "from": 2,
+      "to": 1,
+      "text": "Result dictionary",
+      "reply": true
+    },
+    {
+      "from": 1,
+      "to": 0,
+      "text": "HTTP 200 JSON; inspect success / status",
+      "reply": true
+    }
+  ],
+  "caption": "Invalid requirements skip the engine. Unexpected route exceptions return INTERNAL_ERROR; the final response still normally has HTTP 200. JSON business failure must be checked via success/status."
+}

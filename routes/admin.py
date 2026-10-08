@@ -348,6 +348,7 @@ def manage_teachers():
         name = request.form.get("name", "").strip()
         email = normalize_email(request.form.get("email"))
         departments = request.form.get("departments", "").strip()
+        subjects = request.form.get("subjects", "").strip()
         if not teacher_id or not name or not departments or not is_valid_email(email):
             flash("Teacher ID, name, department, and a valid email are required.", "danger")
             return redirect(url_for("main.manage_teachers"))
@@ -380,6 +381,7 @@ def manage_teachers():
                 name=name,
                 email=email,
                 departments=departments,
+                subjects=subjects,
                 available_days=",".join(days),
                 max_hours=max_hours,
             )
@@ -502,6 +504,7 @@ def edit_teacher(id):
         teacher.name = request.form["name"]
         teacher.email = request.form["email"]
         teacher.departments = request.form["departments"]
+        teacher.subjects = request.form.get("subjects", "").strip()
         teacher.max_hours = request.form["max_hours"]
         days = request.form.getlist("days")
         if days:

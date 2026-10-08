@@ -1,0 +1,2332 @@
+{
+  "revision": "56e33e13a5e518095a7eeb3991ca8121723e38a7",
+  "tables": [
+    {
+      "model": "SubjectCourse",
+      "table": "subject_courses",
+      "line": 17,
+      "columns": [
+        {
+          "name": "subject_id",
+          "type": "Integer",
+          "pk": true,
+          "nullable": false,
+          "unique": false,
+          "default": null,
+          "line": 19,
+          "references": "subject.id",
+          "ondelete": "CASCADE"
+        },
+        {
+          "name": "course_id",
+          "type": "Integer",
+          "pk": true,
+          "nullable": false,
+          "unique": false,
+          "default": null,
+          "line": 22,
+          "references": "course.id",
+          "ondelete": "CASCADE"
+        },
+        {
+          "name": "is_active",
+          "type": "Boolean",
+          "pk": false,
+          "nullable": true,
+          "unique": false,
+          "default": true,
+          "line": 25
+        }
+      ],
+      "constraints": [],
+      "indexes": []
+    },
+    {
+      "model": "Institute",
+      "table": "institute",
+      "line": 28,
+      "columns": [
+        {
+          "name": "id",
+          "type": "Integer",
+          "pk": true,
+          "nullable": false,
+          "unique": false,
+          "default": null,
+          "line": 29
+        },
+        {
+          "name": "name",
+          "type": "String(100)",
+          "pk": false,
+          "nullable": false,
+          "unique": false,
+          "default": null,
+          "line": 30
+        },
+        {
+          "name": "institute_code",
+          "type": "String(20)",
+          "pk": false,
+          "nullable": false,
+          "unique": true,
+          "default": null,
+          "line": 31
+        },
+        {
+          "name": "admin_username",
+          "type": "String(50)",
+          "pk": false,
+          "nullable": false,
+          "unique": true,
+          "default": null,
+          "line": 32
+        },
+        {
+          "name": "admin_email",
+          "type": "String(100)",
+          "pk": false,
+          "nullable": false,
+          "unique": true,
+          "default": null,
+          "line": 33
+        },
+        {
+          "name": "admin_password",
+          "type": "String(255)",
+          "pk": false,
+          "nullable": false,
+          "unique": false,
+          "default": null,
+          "line": 34
+        }
+      ],
+      "constraints": [],
+      "indexes": []
+    },
+    {
+      "model": "Teacher",
+      "table": "teacher",
+      "line": 37,
+      "columns": [
+        {
+          "name": "id",
+          "type": "Integer",
+          "pk": true,
+          "nullable": false,
+          "unique": false,
+          "default": null,
+          "line": 42
+        },
+        {
+          "name": "institute_id",
+          "type": "Integer",
+          "pk": false,
+          "nullable": true,
+          "unique": false,
+          "default": null,
+          "line": 43,
+          "references": "institute.id",
+          "ondelete": "CASCADE"
+        },
+        {
+          "name": "institute_code",
+          "type": "String(20)",
+          "pk": false,
+          "nullable": false,
+          "unique": false,
+          "default": null,
+          "line": 46
+        },
+        {
+          "name": "teacher_id",
+          "type": "String(20)",
+          "pk": false,
+          "nullable": false,
+          "unique": false,
+          "default": null,
+          "line": 47
+        },
+        {
+          "name": "name",
+          "type": "String(100)",
+          "pk": false,
+          "nullable": false,
+          "unique": false,
+          "default": null,
+          "line": 48
+        },
+        {
+          "name": "email",
+          "type": "String(100)",
+          "pk": false,
+          "nullable": false,
+          "unique": true,
+          "default": null,
+          "line": 49
+        },
+        {
+          "name": "departments",
+          "type": "String(100)",
+          "pk": false,
+          "nullable": false,
+          "unique": false,
+          "default": null,
+          "line": 50
+        },
+        {
+          "name": "available_days",
+          "type": "String(100)",
+          "pk": false,
+          "nullable": false,
+          "unique": false,
+          "default": null,
+          "line": 51
+        },
+        {
+          "name": "max_hours",
+          "type": "Integer",
+          "pk": false,
+          "nullable": false,
+          "unique": false,
+          "default": null,
+          "line": 52
+        },
+        {
+          "name": "password",
+          "type": "String(255)",
+          "pk": false,
+          "nullable": true,
+          "unique": false,
+          "default": null,
+          "line": 53
+        }
+      ],
+      "constraints": [
+        {
+          "name": "uq_teacher_institute_identifier",
+          "columns": [
+            "institute_code",
+            "teacher_id"
+          ]
+        }
+      ],
+      "indexes": [
+        {
+          "name": "ix_teacher_institute_name",
+          "columns": [
+            "institute_code",
+            "name"
+          ]
+        }
+      ]
+    },
+    {
+      "model": "Course",
+      "table": "course",
+      "line": 56,
+      "columns": [
+        {
+          "name": "id",
+          "type": "Integer",
+          "pk": true,
+          "nullable": false,
+          "unique": false,
+          "default": null,
+          "line": 60
+        },
+        {
+          "name": "institute_id",
+          "type": "Integer",
+          "pk": false,
+          "nullable": true,
+          "unique": false,
+          "default": null,
+          "line": 61,
+          "references": "institute.id",
+          "ondelete": "CASCADE"
+        },
+        {
+          "name": "institute_code",
+          "type": "String(20)",
+          "pk": false,
+          "nullable": false,
+          "unique": false,
+          "default": null,
+          "line": 64
+        },
+        {
+          "name": "class_id",
+          "type": "String(50)",
+          "pk": false,
+          "nullable": false,
+          "unique": false,
+          "default": null,
+          "line": 65
+        },
+        {
+          "name": "department",
+          "type": "String(50)",
+          "pk": false,
+          "nullable": false,
+          "unique": false,
+          "default": null,
+          "line": 66
+        },
+        {
+          "name": "semester",
+          "type": "Integer",
+          "pk": false,
+          "nullable": false,
+          "unique": false,
+          "default": null,
+          "line": 67
+        },
+        {
+          "name": "division",
+          "type": "String(10)",
+          "pk": false,
+          "nullable": false,
+          "unique": false,
+          "default": null,
+          "line": 68
+        }
+      ],
+      "constraints": [
+        {
+          "name": "uq_course_institute_class",
+          "columns": [
+            "institute_code",
+            "class_id"
+          ]
+        }
+      ],
+      "indexes": []
+    },
+    {
+      "model": "Subject",
+      "table": "subject",
+      "line": 71,
+      "columns": [
+        {
+          "name": "id",
+          "type": "Integer",
+          "pk": true,
+          "nullable": false,
+          "unique": false,
+          "default": null,
+          "line": 76
+        },
+        {
+          "name": "institute_id",
+          "type": "Integer",
+          "pk": false,
+          "nullable": true,
+          "unique": false,
+          "default": null,
+          "line": 77,
+          "references": "institute.id",
+          "ondelete": "CASCADE"
+        },
+        {
+          "name": "teacher_id_fk",
+          "type": "Integer",
+          "pk": false,
+          "nullable": true,
+          "unique": false,
+          "default": null,
+          "line": 80,
+          "references": "teacher.id",
+          "ondelete": "RESTRICT"
+        },
+        {
+          "name": "institute_code",
+          "type": "String(20)",
+          "pk": false,
+          "nullable": false,
+          "unique": false,
+          "default": null,
+          "line": 86
+        },
+        {
+          "name": "subject_code",
+          "type": "String(20)",
+          "pk": false,
+          "nullable": false,
+          "unique": false,
+          "default": null,
+          "line": 87
+        },
+        {
+          "name": "subject_name",
+          "type": "String(100)",
+          "pk": false,
+          "nullable": false,
+          "unique": false,
+          "default": null,
+          "line": 88
+        },
+        {
+          "name": "class_id",
+          "type": "String(100)",
+          "pk": false,
+          "nullable": false,
+          "unique": false,
+          "default": null,
+          "line": 89
+        },
+        {
+          "name": "teacher_id",
+          "type": "String(20)",
+          "pk": false,
+          "nullable": false,
+          "unique": false,
+          "default": null,
+          "line": 90
+        },
+        {
+          "name": "total_course_hours",
+          "type": "Integer",
+          "pk": false,
+          "nullable": false,
+          "unique": false,
+          "default": 50,
+          "line": 91
+        },
+        {
+          "name": "required_hours",
+          "type": "Integer",
+          "pk": false,
+          "nullable": false,
+          "unique": false,
+          "default": null,
+          "line": 92
+        },
+        {
+          "name": "completed_hours",
+          "type": "Integer",
+          "pk": false,
+          "nullable": false,
+          "unique": false,
+          "default": 0,
+          "line": 93
+        },
+        {
+          "name": "subject_type",
+          "type": "String(50)",
+          "pk": false,
+          "nullable": true,
+          "unique": false,
+          "default": "Theory",
+          "line": 94
+        },
+        {
+          "name": "session_length",
+          "type": "Integer",
+          "pk": false,
+          "nullable": true,
+          "unique": false,
+          "default": 1,
+          "line": 95
+        },
+        {
+          "name": "preferred_days",
+          "type": "String(100)",
+          "pk": false,
+          "nullable": true,
+          "unique": false,
+          "default": "",
+          "line": 96
+        }
+      ],
+      "constraints": [
+        {
+          "name": "uq_subject_institute_code",
+          "columns": [
+            "institute_code",
+            "subject_code"
+          ]
+        }
+      ],
+      "indexes": [
+        {
+          "name": "ix_subject_institute_teacher",
+          "columns": [
+            "institute_code",
+            "teacher_id"
+          ]
+        }
+      ]
+    },
+    {
+      "model": "Timetable",
+      "table": "timetable",
+      "line": 99,
+      "columns": [
+        {
+          "name": "id",
+          "type": "Integer",
+          "pk": true,
+          "nullable": false,
+          "unique": false,
+          "default": null,
+          "line": 117
+        },
+        {
+          "name": "institute_id",
+          "type": "Integer",
+          "pk": false,
+          "nullable": true,
+          "unique": false,
+          "default": null,
+          "line": 118,
+          "references": "institute.id",
+          "ondelete": "CASCADE"
+        },
+        {
+          "name": "course_id_fk",
+          "type": "Integer",
+          "pk": false,
+          "nullable": true,
+          "unique": false,
+          "default": null,
+          "line": 121,
+          "references": "course.id",
+          "ondelete": "CASCADE"
+        },
+        {
+          "name": "teacher_id_fk",
+          "type": "Integer",
+          "pk": false,
+          "nullable": true,
+          "unique": false,
+          "default": null,
+          "line": 124,
+          "references": "teacher.id",
+          "ondelete": "CASCADE"
+        },
+        {
+          "name": "subject_id_fk",
+          "type": "Integer",
+          "pk": false,
+          "nullable": true,
+          "unique": false,
+          "default": null,
+          "line": 127,
+          "references": "subject.id",
+          "ondelete": "CASCADE"
+        },
+        {
+          "name": "session_group_id",
+          "type": "String(50)",
+          "pk": false,
+          "nullable": true,
+          "unique": false,
+          "default": null,
+          "line": 130
+        },
+        {
+          "name": "institute_code",
+          "type": "String(20)",
+          "pk": false,
+          "nullable": false,
+          "unique": false,
+          "default": null,
+          "line": 131
+        },
+        {
+          "name": "class_id",
+          "type": "String(50)",
+          "pk": false,
+          "nullable": false,
+          "unique": false,
+          "default": null,
+          "line": 132
+        },
+        {
+          "name": "day_name",
+          "type": "String(20)",
+          "pk": false,
+          "nullable": false,
+          "unique": false,
+          "default": null,
+          "line": 133
+        },
+        {
+          "name": "start_time",
+          "type": "String(20)",
+          "pk": false,
+          "nullable": false,
+          "unique": false,
+          "default": null,
+          "line": 134
+        },
+        {
+          "name": "end_time",
+          "type": "String(20)",
+          "pk": false,
+          "nullable": false,
+          "unique": false,
+          "default": null,
+          "line": 135
+        },
+        {
+          "name": "subject_name",
+          "type": "String(100)",
+          "pk": false,
+          "nullable": false,
+          "unique": false,
+          "default": null,
+          "line": 136
+        },
+        {
+          "name": "teacher_name",
+          "type": "String(100)",
+          "pk": false,
+          "nullable": false,
+          "unique": false,
+          "default": null,
+          "line": 137
+        },
+        {
+          "name": "is_proxy",
+          "type": "Boolean",
+          "pk": false,
+          "nullable": true,
+          "unique": false,
+          "default": false,
+          "line": 138
+        },
+        {
+          "name": "specific_date",
+          "type": "Date",
+          "pk": false,
+          "nullable": true,
+          "unique": false,
+          "default": null,
+          "line": 139
+        },
+        {
+          "name": "leave_id",
+          "type": "Integer",
+          "pk": false,
+          "nullable": true,
+          "unique": false,
+          "default": null,
+          "line": 142,
+          "references": "teacher_leave.id",
+          "ondelete": "NO ACTION"
+        }
+      ],
+      "constraints": [],
+      "indexes": [
+        {
+          "name": "ix_timetable_institute_class_slot",
+          "columns": [
+            "institute_code",
+            "class_id",
+            "day_name",
+            "start_time"
+          ]
+        },
+        {
+          "name": "ix_timetable_institute_teacher_slot",
+          "columns": [
+            "institute_code",
+            "teacher_name",
+            "day_name",
+            "start_time"
+          ]
+        },
+        {
+          "name": "ix_timetable_institute_date",
+          "columns": [
+            "institute_code",
+            "specific_date"
+          ]
+        },
+        {
+          "name": "ix_timetable_session_group_id",
+          "columns": [
+            "session_group_id"
+          ]
+        }
+      ]
+    },
+    {
+      "model": "Settings",
+      "table": "settings",
+      "line": 147,
+      "columns": [
+        {
+          "name": "id",
+          "type": "Integer",
+          "pk": true,
+          "nullable": false,
+          "unique": false,
+          "default": null,
+          "line": 151
+        },
+        {
+          "name": "institute_code",
+          "type": "String(20)",
+          "pk": false,
+          "nullable": false,
+          "unique": false,
+          "default": null,
+          "line": 152
+        },
+        {
+          "name": "key",
+          "type": "String(50)",
+          "pk": false,
+          "nullable": false,
+          "unique": false,
+          "default": null,
+          "line": 153
+        },
+        {
+          "name": "value",
+          "type": "String(100)",
+          "pk": false,
+          "nullable": false,
+          "unique": false,
+          "default": null,
+          "line": 154
+        }
+      ],
+      "constraints": [
+        {
+          "name": "uq_settings_institute_key",
+          "columns": [
+            "institute_code",
+            "key"
+          ]
+        }
+      ],
+      "indexes": []
+    },
+    {
+      "model": "Student",
+      "table": "student",
+      "line": 157,
+      "columns": [
+        {
+          "name": "id",
+          "type": "Integer",
+          "pk": true,
+          "nullable": false,
+          "unique": false,
+          "default": null,
+          "line": 158
+        },
+        {
+          "name": "institute_code",
+          "type": "String(20)",
+          "pk": false,
+          "nullable": false,
+          "unique": false,
+          "default": null,
+          "line": 159
+        },
+        {
+          "name": "name",
+          "type": "String(100)",
+          "pk": false,
+          "nullable": false,
+          "unique": false,
+          "default": null,
+          "line": 160
+        },
+        {
+          "name": "email",
+          "type": "String(100)",
+          "pk": false,
+          "nullable": false,
+          "unique": true,
+          "default": null,
+          "line": 161
+        },
+        {
+          "name": "password",
+          "type": "String(255)",
+          "pk": false,
+          "nullable": false,
+          "unique": false,
+          "default": null,
+          "line": 162
+        },
+        {
+          "name": "class_id",
+          "type": "String(50)",
+          "pk": false,
+          "nullable": false,
+          "unique": false,
+          "default": null,
+          "line": 163
+        }
+      ],
+      "constraints": [],
+      "indexes": []
+    },
+    {
+      "model": "TeacherUpdateRequest",
+      "table": "teacher_update_request",
+      "line": 166,
+      "columns": [
+        {
+          "name": "id",
+          "type": "Integer",
+          "pk": true,
+          "nullable": false,
+          "unique": false,
+          "default": null,
+          "line": 168
+        },
+        {
+          "name": "institute_code",
+          "type": "String(20)",
+          "pk": false,
+          "nullable": false,
+          "unique": false,
+          "default": null,
+          "line": 169
+        },
+        {
+          "name": "teacher_id",
+          "type": "String(20)",
+          "pk": false,
+          "nullable": false,
+          "unique": false,
+          "default": null,
+          "line": 170
+        },
+        {
+          "name": "new_name",
+          "type": "String(100)",
+          "pk": false,
+          "nullable": true,
+          "unique": false,
+          "default": null,
+          "line": 171
+        },
+        {
+          "name": "new_email",
+          "type": "String(100)",
+          "pk": false,
+          "nullable": true,
+          "unique": false,
+          "default": null,
+          "line": 172
+        },
+        {
+          "name": "status",
+          "type": "String(20)",
+          "pk": false,
+          "nullable": true,
+          "unique": false,
+          "default": "Pending",
+          "line": 173
+        },
+        {
+          "name": "created_at",
+          "type": "DateTime",
+          "pk": false,
+          "nullable": true,
+          "unique": false,
+          "default": "utc_now",
+          "line": 174
+        }
+      ],
+      "constraints": [],
+      "indexes": [
+        {
+          "name": "ix_update_request_institute_status",
+          "columns": [
+            "institute_code",
+            "status"
+          ]
+        }
+      ]
+    },
+    {
+      "model": "AcademicCalendar",
+      "table": "academic_calendar",
+      "line": 177,
+      "columns": [
+        {
+          "name": "id",
+          "type": "Integer",
+          "pk": true,
+          "nullable": false,
+          "unique": false,
+          "default": null,
+          "line": 179
+        },
+        {
+          "name": "institute_code",
+          "type": "String(20)",
+          "pk": false,
+          "nullable": false,
+          "unique": false,
+          "default": null,
+          "line": 180
+        },
+        {
+          "name": "date",
+          "type": "Date",
+          "pk": false,
+          "nullable": false,
+          "unique": false,
+          "default": null,
+          "line": 181
+        },
+        {
+          "name": "event_name",
+          "type": "String(200)",
+          "pk": false,
+          "nullable": false,
+          "unique": false,
+          "default": null,
+          "line": 182
+        },
+        {
+          "name": "department",
+          "type": "String(50)",
+          "pk": false,
+          "nullable": true,
+          "unique": false,
+          "default": null,
+          "line": 183
+        },
+        {
+          "name": "is_holiday",
+          "type": "Boolean",
+          "pk": false,
+          "nullable": true,
+          "unique": false,
+          "default": true,
+          "line": 184
+        }
+      ],
+      "constraints": [],
+      "indexes": [
+        {
+          "name": "ix_calendar_institute_date",
+          "columns": [
+            "institute_code",
+            "date"
+          ]
+        }
+      ]
+    },
+    {
+      "model": "TeacherLeave",
+      "table": "teacher_leave",
+      "line": 187,
+      "columns": [
+        {
+          "name": "id",
+          "type": "Integer",
+          "pk": true,
+          "nullable": false,
+          "unique": false,
+          "default": null,
+          "line": 192
+        },
+        {
+          "name": "institute_code",
+          "type": "String(20)",
+          "pk": false,
+          "nullable": false,
+          "unique": false,
+          "default": null,
+          "line": 193
+        },
+        {
+          "name": "teacher_id",
+          "type": "String(20)",
+          "pk": false,
+          "nullable": false,
+          "unique": false,
+          "default": null,
+          "line": 194
+        },
+        {
+          "name": "date",
+          "type": "Date",
+          "pk": false,
+          "nullable": false,
+          "unique": false,
+          "default": null,
+          "line": 195
+        },
+        {
+          "name": "start_time",
+          "type": "String(20)",
+          "pk": false,
+          "nullable": true,
+          "unique": false,
+          "default": null,
+          "line": 196
+        },
+        {
+          "name": "status",
+          "type": "String(20)",
+          "pk": false,
+          "nullable": true,
+          "unique": false,
+          "default": "Pending",
+          "line": 197
+        }
+      ],
+      "constraints": [],
+      "indexes": [
+        {
+          "name": "ix_leave_institute_status_date",
+          "columns": [
+            "institute_code",
+            "status",
+            "date"
+          ]
+        },
+        {
+          "name": "ix_leave_teacher_date",
+          "columns": [
+            "institute_code",
+            "teacher_id",
+            "date"
+          ]
+        }
+      ]
+    },
+    {
+      "model": "Notification",
+      "table": "notification",
+      "line": 200,
+      "columns": [
+        {
+          "name": "id",
+          "type": "Integer",
+          "pk": true,
+          "nullable": false,
+          "unique": false,
+          "default": null,
+          "line": 206
+        },
+        {
+          "name": "institute_code",
+          "type": "String(20)",
+          "pk": false,
+          "nullable": false,
+          "unique": false,
+          "default": null,
+          "line": 207
+        },
+        {
+          "name": "user_type",
+          "type": "String(20)",
+          "pk": false,
+          "nullable": false,
+          "unique": false,
+          "default": null,
+          "line": 208
+        },
+        {
+          "name": "user_id",
+          "type": "String(50)",
+          "pk": false,
+          "nullable": true,
+          "unique": false,
+          "default": null,
+          "line": 209
+        },
+        {
+          "name": "message",
+          "type": "Text",
+          "pk": false,
+          "nullable": false,
+          "unique": false,
+          "default": null,
+          "line": 210
+        },
+        {
+          "name": "is_read",
+          "type": "Boolean",
+          "pk": false,
+          "nullable": true,
+          "unique": false,
+          "default": false,
+          "line": 211
+        },
+        {
+          "name": "created_at",
+          "type": "DateTime",
+          "pk": false,
+          "nullable": true,
+          "unique": false,
+          "default": "utc_now",
+          "line": 212
+        }
+      ],
+      "constraints": [],
+      "indexes": [
+        {
+          "name": "ix_notification_recipient",
+          "columns": [
+            "institute_code",
+            "user_type",
+            "user_id",
+            "created_at"
+          ]
+        }
+      ]
+    },
+    {
+      "model": "GenerationHistory",
+      "table": "generation_history",
+      "line": 215,
+      "columns": [
+        {
+          "name": "id",
+          "type": "Integer",
+          "pk": true,
+          "nullable": false,
+          "unique": false,
+          "default": null,
+          "line": 220
+        },
+        {
+          "name": "institute_id",
+          "type": "Integer",
+          "pk": false,
+          "nullable": false,
+          "unique": false,
+          "default": null,
+          "line": 221,
+          "references": "institute.id",
+          "ondelete": "CASCADE"
+        },
+        {
+          "name": "institute_code",
+          "type": "String(20)",
+          "pk": false,
+          "nullable": false,
+          "unique": false,
+          "default": null,
+          "line": 224
+        },
+        {
+          "name": "status",
+          "type": "String(20)",
+          "pk": false,
+          "nullable": false,
+          "unique": false,
+          "default": null,
+          "line": 227
+        },
+        {
+          "name": "sessions_count",
+          "type": "Integer",
+          "pk": false,
+          "nullable": false,
+          "unique": false,
+          "default": 0,
+          "line": 228
+        },
+        {
+          "name": "generation_time",
+          "type": "Float",
+          "pk": false,
+          "nullable": true,
+          "unique": false,
+          "default": null,
+          "line": 229
+        },
+        {
+          "name": "optimization_time",
+          "type": "Float",
+          "pk": false,
+          "nullable": true,
+          "unique": false,
+          "default": null,
+          "line": 230
+        },
+        {
+          "name": "gap_score",
+          "type": "Integer",
+          "pk": false,
+          "nullable": true,
+          "unique": false,
+          "default": null,
+          "line": 231
+        },
+        {
+          "name": "primary_failure_reason",
+          "type": "String(255)",
+          "pk": false,
+          "nullable": true,
+          "unique": false,
+          "default": null,
+          "line": 232
+        },
+        {
+          "name": "diagnostics_json",
+          "type": "Text",
+          "pk": false,
+          "nullable": true,
+          "unique": false,
+          "default": null,
+          "line": 233
+        },
+        {
+          "name": "created_at",
+          "type": "DateTime",
+          "pk": false,
+          "nullable": true,
+          "unique": false,
+          "default": "utc_now",
+          "line": 236
+        }
+      ],
+      "constraints": [],
+      "indexes": [
+        {
+          "name": "ix_generation_history_institute_created",
+          "columns": [
+            "institute_code",
+            "created_at"
+          ]
+        }
+      ]
+    }
+  ],
+  "routes": [
+    {
+      "path": "/",
+      "methods": [
+        "GET"
+      ],
+      "function": "home",
+      "role": "public / staged session",
+      "response": "HTML / redirect",
+      "inputs": {
+        "form": [],
+        "args": [],
+        "files": []
+      },
+      "source": "routes/auth.py",
+      "line": 55
+    },
+    {
+      "path": "/activate_teacher",
+      "methods": [
+        "GET",
+        "POST"
+      ],
+      "function": "activate_teacher",
+      "role": "public / staged session",
+      "response": "HTML / redirect",
+      "inputs": {
+        "form": [
+          "email",
+          "inst_code"
+        ],
+        "args": [],
+        "files": []
+      },
+      "source": "routes/teacher.py",
+      "line": 84
+    },
+    {
+      "path": "/admin/approve_leave/<int:leave_id>",
+      "methods": [
+        "POST"
+      ],
+      "function": "approve_leave",
+      "role": "admin",
+      "response": "HTML / redirect",
+      "inputs": {
+        "form": [],
+        "args": [],
+        "files": []
+      },
+      "source": "routes/admin.py",
+      "line": 1403
+    },
+    {
+      "path": "/admin/leave_requests",
+      "methods": [
+        "GET"
+      ],
+      "function": "leave_requests",
+      "role": "admin",
+      "response": "HTML / redirect",
+      "inputs": {
+        "form": [],
+        "args": [],
+        "files": []
+      },
+      "source": "routes/admin.py",
+      "line": 1368
+    },
+    {
+      "path": "/admin/reject_leave/<int:leave_id>",
+      "methods": [
+        "POST"
+      ],
+      "function": "reject_leave",
+      "role": "admin",
+      "response": "HTML / redirect",
+      "inputs": {
+        "form": [],
+        "args": [],
+        "files": []
+      },
+      "source": "routes/admin.py",
+      "line": 1419
+    },
+    {
+      "path": "/admin/requests/approve/<int:req_id>",
+      "methods": [
+        "POST"
+      ],
+      "function": "approve_teacher_request",
+      "role": "admin",
+      "response": "HTML / redirect",
+      "inputs": {
+        "form": [],
+        "args": [],
+        "files": []
+      },
+      "source": "routes/admin.py",
+      "line": 1237
+    },
+    {
+      "path": "/admin/requests/reject/<int:req_id>",
+      "methods": [
+        "POST"
+      ],
+      "function": "reject_teacher_request",
+      "role": "admin",
+      "response": "HTML / redirect",
+      "inputs": {
+        "form": [],
+        "args": [],
+        "files": []
+      },
+      "source": "routes/admin.py",
+      "line": 1275
+    },
+    {
+      "path": "/admin/revoke_leave/<int:leave_id>",
+      "methods": [
+        "POST"
+      ],
+      "function": "revoke_leave",
+      "role": "admin",
+      "response": "HTML / redirect",
+      "inputs": {
+        "form": [],
+        "args": [],
+        "files": []
+      },
+      "source": "routes/admin.py",
+      "line": 1432
+    },
+    {
+      "path": "/admin_dash",
+      "methods": [
+        "GET"
+      ],
+      "function": "admin_dash",
+      "role": "admin",
+      "response": "HTML / redirect",
+      "inputs": {
+        "form": [],
+        "args": [],
+        "files": []
+      },
+      "source": "routes/admin.py",
+      "line": 66
+    },
+    {
+      "path": "/api/generate_timetable",
+      "methods": [
+        "POST"
+      ],
+      "function": "api_generate_timetable",
+      "role": "admin",
+      "response": "JSON",
+      "inputs": {
+        "form": [],
+        "args": [],
+        "files": []
+      },
+      "source": "routes/admin.py",
+      "line": 665
+    },
+    {
+      "path": "/api/get_classes/<inst_code>",
+      "methods": [
+        "GET"
+      ],
+      "function": "get_classes",
+      "role": "public / staged session",
+      "response": "JSON",
+      "inputs": {
+        "form": [],
+        "args": [],
+        "files": []
+      },
+      "source": "routes/teacher.py",
+      "line": 392
+    },
+    {
+      "path": "/api/get_slot_data",
+      "methods": [
+        "GET"
+      ],
+      "function": "get_slot_data",
+      "role": "admin",
+      "response": "JSON",
+      "inputs": {
+        "form": [],
+        "args": [
+          "class_id",
+          "day",
+          "start_time"
+        ],
+        "files": []
+      },
+      "source": "routes/admin.py",
+      "line": 802
+    },
+    {
+      "path": "/apply_leave",
+      "methods": [
+        "GET",
+        "POST"
+      ],
+      "function": "apply_leave",
+      "role": "teacher",
+      "response": "HTML / redirect",
+      "inputs": {
+        "form": [
+          "leave_date",
+          "leave_time"
+        ],
+        "args": [],
+        "files": []
+      },
+      "source": "routes/teacher.py",
+      "line": 294
+    },
+    {
+      "path": "/bulk_delete/<type>",
+      "methods": [
+        "POST"
+      ],
+      "function": "bulk_delete_items",
+      "role": "admin",
+      "response": "HTML / redirect",
+      "inputs": {
+        "form": [
+          "selected_ids"
+        ],
+        "args": [],
+        "files": []
+      },
+      "source": "routes/admin.py",
+      "line": 611
+    },
+    {
+      "path": "/bulk_import/<manage_type>",
+      "methods": [
+        "POST"
+      ],
+      "function": "bulk_import",
+      "role": "admin",
+      "response": "HTML / redirect",
+      "inputs": {
+        "form": [],
+        "args": [],
+        "files": [
+          "file"
+        ]
+      },
+      "source": "routes/admin.py",
+      "line": 138
+    },
+    {
+      "path": "/clear_admin_notifications",
+      "methods": [
+        "POST"
+      ],
+      "function": "clear_admin_notifications",
+      "role": "admin",
+      "response": "HTML / redirect",
+      "inputs": {
+        "form": [],
+        "args": [],
+        "files": []
+      },
+      "source": "routes/admin.py",
+      "line": 1358
+    },
+    {
+      "path": "/clear_history",
+      "methods": [
+        "POST"
+      ],
+      "function": "clear_history",
+      "role": "admin",
+      "response": "HTML / redirect",
+      "inputs": {
+        "form": [],
+        "args": [],
+        "files": []
+      },
+      "source": "routes/admin.py",
+      "line": 712
+    },
+    {
+      "path": "/clear_teacher_notifications",
+      "methods": [
+        "POST"
+      ],
+      "function": "clear_teacher_notifications",
+      "role": "teacher",
+      "response": "HTML / redirect",
+      "inputs": {
+        "form": [],
+        "args": [],
+        "files": []
+      },
+      "source": "routes/teacher.py",
+      "line": 432
+    },
+    {
+      "path": "/college_settings",
+      "methods": [
+        "GET",
+        "POST"
+      ],
+      "function": "college_settings",
+      "role": "admin",
+      "response": "HTML / redirect",
+      "inputs": {
+        "form": [
+          "start_time",
+          "working_days"
+        ],
+        "args": [],
+        "files": []
+      },
+      "source": "routes/admin.py",
+      "line": 1191
+    },
+    {
+      "path": "/delete/<resource_type>/<int:id>",
+      "methods": [
+        "POST"
+      ],
+      "function": "delete_item",
+      "role": "admin",
+      "response": "HTML / redirect",
+      "inputs": {
+        "form": [],
+        "args": [],
+        "files": []
+      },
+      "source": "routes/admin.py",
+      "line": 593
+    },
+    {
+      "path": "/edit_course/<int:id>",
+      "methods": [
+        "GET",
+        "POST"
+      ],
+      "function": "edit_course",
+      "role": "admin",
+      "response": "HTML / redirect",
+      "inputs": {
+        "form": [
+          "class_id",
+          "department",
+          "division",
+          "semester"
+        ],
+        "args": [],
+        "files": []
+      },
+      "source": "routes/admin.py",
+      "line": 481
+    },
+    {
+      "path": "/edit_subject/<int:id>",
+      "methods": [
+        "GET",
+        "POST"
+      ],
+      "function": "edit_subject",
+      "role": "admin",
+      "response": "HTML / redirect",
+      "inputs": {
+        "form": [
+          "class_id",
+          "subject_code",
+          "subject_name",
+          "subject_type",
+          "teacher_id"
+        ],
+        "args": [],
+        "files": []
+      },
+      "source": "routes/admin.py",
+      "line": 520
+    },
+    {
+      "path": "/edit_teacher/<int:id>",
+      "methods": [
+        "GET",
+        "POST"
+      ],
+      "function": "edit_teacher",
+      "role": "admin",
+      "response": "HTML / redirect",
+      "inputs": {
+        "form": [
+          "days",
+          "departments",
+          "email",
+          "max_hours",
+          "name",
+          "teacher_id"
+        ],
+        "args": [],
+        "files": []
+      },
+      "source": "routes/admin.py",
+      "line": 496
+    },
+    {
+      "path": "/edit_timetable_slot",
+      "methods": [
+        "POST"
+      ],
+      "function": "edit_timetable_slot",
+      "role": "admin",
+      "response": "HTML / redirect",
+      "inputs": {
+        "form": [
+          "class_id",
+          "entry_id",
+          "new_subject",
+          "new_teacher"
+        ],
+        "args": [],
+        "files": []
+      },
+      "source": "routes/admin.py",
+      "line": 852
+    },
+    {
+      "path": "/export_timetables",
+      "methods": [
+        "GET"
+      ],
+      "function": "export_timetables",
+      "role": "admin",
+      "response": "file / redirect",
+      "inputs": {
+        "form": [],
+        "args": [],
+        "files": []
+      },
+      "source": "routes/admin.py",
+      "line": 1053
+    },
+    {
+      "path": "/forgot_password",
+      "methods": [
+        "GET",
+        "POST"
+      ],
+      "function": "forgot_password",
+      "role": "public / staged session",
+      "response": "HTML / redirect",
+      "inputs": {
+        "form": [
+          "email"
+        ],
+        "args": [],
+        "files": []
+      },
+      "source": "routes/auth.py",
+      "line": 210
+    },
+    {
+      "path": "/generate_timetable",
+      "methods": [
+        "GET"
+      ],
+      "function": "generate_timetable",
+      "role": "admin",
+      "response": "HTML / redirect",
+      "inputs": {
+        "form": [],
+        "args": [],
+        "files": []
+      },
+      "source": "routes/admin.py",
+      "line": 655
+    },
+    {
+      "path": "/generation_history",
+      "methods": [
+        "GET"
+      ],
+      "function": "generation_history",
+      "role": "admin",
+      "response": "HTML / redirect",
+      "inputs": {
+        "form": [],
+        "args": [],
+        "files": []
+      },
+      "source": "routes/admin.py",
+      "line": 698
+    },
+    {
+      "path": "/healthz",
+      "methods": [
+        "GET"
+      ],
+      "function": "health_check",
+      "role": "public / staged session",
+      "response": "JSON",
+      "inputs": {
+        "form": [],
+        "args": [],
+        "files": []
+      },
+      "source": "app.py",
+      "line": 64
+    },
+    {
+      "path": "/login",
+      "methods": [
+        "GET"
+      ],
+      "function": "login_page",
+      "role": "public / staged session",
+      "response": "HTML / redirect",
+      "inputs": {
+        "form": [],
+        "args": [],
+        "files": []
+      },
+      "source": "routes/auth.py",
+      "line": 62
+    },
+    {
+      "path": "/login_admin",
+      "methods": [
+        "GET",
+        "POST"
+      ],
+      "function": "login_admin",
+      "role": "public / staged session",
+      "response": "HTML / redirect",
+      "inputs": {
+        "form": [
+          "password",
+          "username"
+        ],
+        "args": [],
+        "files": []
+      },
+      "source": "routes/auth.py",
+      "line": 180
+    },
+    {
+      "path": "/login_student",
+      "methods": [
+        "GET",
+        "POST"
+      ],
+      "function": "login_student",
+      "role": "public / staged session",
+      "response": "HTML / redirect",
+      "inputs": {
+        "form": [
+          "email",
+          "password"
+        ],
+        "args": [],
+        "files": []
+      },
+      "source": "routes/student.py",
+      "line": 141
+    },
+    {
+      "path": "/login_teacher",
+      "methods": [
+        "GET",
+        "POST"
+      ],
+      "function": "login_teacher",
+      "role": "public / staged session",
+      "response": "HTML / redirect",
+      "inputs": {
+        "form": [
+          "email",
+          "password"
+        ],
+        "args": [],
+        "files": []
+      },
+      "source": "routes/teacher.py",
+      "line": 162
+    },
+    {
+      "path": "/logout",
+      "methods": [
+        "POST"
+      ],
+      "function": "logout",
+      "role": "public / staged session",
+      "response": "HTML / redirect",
+      "inputs": {
+        "form": [],
+        "args": [],
+        "files": []
+      },
+      "source": "routes/auth.py",
+      "line": 204
+    },
+    {
+      "path": "/manage_calendar",
+      "methods": [
+        "GET",
+        "POST"
+      ],
+      "function": "manage_calendar",
+      "role": "admin",
+      "response": "HTML / redirect",
+      "inputs": {
+        "form": [
+          "date",
+          "department",
+          "event_name",
+          "is_holiday"
+        ],
+        "args": [],
+        "files": []
+      },
+      "source": "routes/admin.py",
+      "line": 1292
+    },
+    {
+      "path": "/manage_courses",
+      "methods": [
+        "GET",
+        "POST"
+      ],
+      "function": "manage_courses",
+      "role": "admin",
+      "response": "HTML / redirect",
+      "inputs": {
+        "form": [
+          "class_id",
+          "department",
+          "division"
+        ],
+        "args": [],
+        "files": []
+      },
+      "source": "routes/admin.py",
+      "line": 303
+    },
+    {
+      "path": "/manage_subjects",
+      "methods": [
+        "GET",
+        "POST"
+      ],
+      "function": "manage_subjects",
+      "role": "admin",
+      "response": "HTML / redirect",
+      "inputs": {
+        "form": [
+          "class_id",
+          "subject_code",
+          "subject_name",
+          "subject_type",
+          "teacher_id"
+        ],
+        "args": [],
+        "files": []
+      },
+      "source": "routes/admin.py",
+      "line": 399
+    },
+    {
+      "path": "/manage_teachers",
+      "methods": [
+        "GET",
+        "POST"
+      ],
+      "function": "manage_teachers",
+      "role": "admin",
+      "response": "HTML / redirect",
+      "inputs": {
+        "form": [
+          "days",
+          "departments",
+          "email",
+          "name",
+          "teacher_id"
+        ],
+        "args": [],
+        "files": []
+      },
+      "source": "routes/admin.py",
+      "line": 341
+    },
+    {
+      "path": "/manual_assign_slot",
+      "methods": [
+        "POST"
+      ],
+      "function": "manual_assign_slot",
+      "role": "admin",
+      "response": "HTML / redirect",
+      "inputs": {
+        "form": [
+          "assign_type",
+          "class_id",
+          "day_name",
+          "event_name",
+          "new_subject",
+          "new_teacher",
+          "start_time"
+        ],
+        "args": [],
+        "files": []
+      },
+      "source": "routes/admin.py",
+      "line": 933
+    },
+    {
+      "path": "/notifications",
+      "methods": [
+        "GET"
+      ],
+      "function": "admin_notifications",
+      "role": "admin",
+      "response": "HTML / redirect",
+      "inputs": {
+        "form": [],
+        "args": [],
+        "files": []
+      },
+      "source": "routes/admin.py",
+      "line": 1338
+    },
+    {
+      "path": "/register_institute",
+      "methods": [
+        "GET",
+        "POST"
+      ],
+      "function": "register_institute",
+      "role": "public / staged session",
+      "response": "HTML / redirect",
+      "inputs": {
+        "form": [
+          "college_name",
+          "email",
+          "password",
+          "username"
+        ],
+        "args": [],
+        "files": []
+      },
+      "source": "routes/auth.py",
+      "line": 69
+    },
+    {
+      "path": "/register_student",
+      "methods": [
+        "GET",
+        "POST"
+      ],
+      "function": "register_student",
+      "role": "public / staged session",
+      "response": "HTML / redirect",
+      "inputs": {
+        "form": [
+          "class_id",
+          "email",
+          "inst_code",
+          "name",
+          "password"
+        ],
+        "args": [],
+        "files": []
+      },
+      "source": "routes/student.py",
+      "line": 83
+    },
+    {
+      "path": "/reset_password",
+      "methods": [
+        "GET",
+        "POST"
+      ],
+      "function": "reset_password",
+      "role": "public / staged session",
+      "response": "HTML / redirect",
+      "inputs": {
+        "form": [
+          "new_password",
+          "otp"
+        ],
+        "args": [],
+        "files": []
+      },
+      "source": "routes/auth.py",
+      "line": 242
+    },
+    {
+      "path": "/settings",
+      "methods": [
+        "GET"
+      ],
+      "function": "settings",
+      "role": "authenticated role (internal check)",
+      "response": "HTML / redirect",
+      "inputs": {
+        "form": [],
+        "args": [],
+        "files": []
+      },
+      "source": "routes/auth.py",
+      "line": 289
+    },
+    {
+      "path": "/settings/change_password",
+      "methods": [
+        "POST"
+      ],
+      "function": "settings_change_password",
+      "role": "authenticated role (internal check)",
+      "response": "HTML / redirect",
+      "inputs": {
+        "form": [
+          "current_password",
+          "new_password"
+        ],
+        "args": [],
+        "files": []
+      },
+      "source": "routes/auth.py",
+      "line": 493
+    },
+    {
+      "path": "/settings/delete_account",
+      "methods": [
+        "GET"
+      ],
+      "function": "delete_account_page",
+      "role": "authenticated role (internal check)",
+      "response": "HTML / redirect",
+      "inputs": {
+        "form": [],
+        "args": [],
+        "files": []
+      },
+      "source": "routes/auth.py",
+      "line": 534
+    },
+    {
+      "path": "/settings/delete_account/confirm",
+      "methods": [
+        "POST"
+      ],
+      "function": "delete_account_confirm",
+      "role": "authenticated role (internal check)",
+      "response": "HTML / redirect",
+      "inputs": {
+        "form": [
+          "otp"
+        ],
+        "args": [],
+        "files": []
+      },
+      "source": "routes/auth.py",
+      "line": 592
+    },
+    {
+      "path": "/settings/delete_account/send_otp",
+      "methods": [
+        "POST"
+      ],
+      "function": "delete_account_send_otp",
+      "role": "authenticated role (internal check)",
+      "response": "HTML / redirect",
+      "inputs": {
+        "form": [
+          "password"
+        ],
+        "args": [],
+        "files": []
+      },
+      "source": "routes/auth.py",
+      "line": 541
+    },
+    {
+      "path": "/settings/delete_account/verify",
+      "methods": [
+        "GET"
+      ],
+      "function": "verify_delete_account_page",
+      "role": "authenticated role (internal check)",
+      "response": "HTML / redirect",
+      "inputs": {
+        "form": [],
+        "args": [],
+        "files": []
+      },
+      "source": "routes/auth.py",
+      "line": 577
+    },
+    {
+      "path": "/settings/update_profile",
+      "methods": [
+        "POST"
+      ],
+      "function": "update_profile",
+      "role": "authenticated role (internal check)",
+      "response": "HTML / redirect",
+      "inputs": {
+        "form": [
+          "email",
+          "institute_code",
+          "name"
+        ],
+        "args": [],
+        "files": []
+      },
+      "source": "routes/auth.py",
+      "line": 321
+    },
+    {
+      "path": "/student_dash",
+      "methods": [
+        "GET"
+      ],
+      "function": "student_dash",
+      "role": "student",
+      "response": "HTML / redirect",
+      "inputs": {
+        "form": [],
+        "args": [
+          "date"
+        ],
+        "files": []
+      },
+      "source": "routes/student.py",
+      "line": 163
+    },
+    {
+      "path": "/student_portal",
+      "methods": [
+        "GET"
+      ],
+      "function": "student_portal",
+      "role": "public / staged session",
+      "response": "HTML / redirect",
+      "inputs": {
+        "form": [],
+        "args": [
+          "class_id",
+          "date",
+          "inst_code"
+        ],
+        "files": []
+      },
+      "source": "routes/student.py",
+      "line": 21
+    },
+    {
+      "path": "/teacher/cancel_leave/<int:leave_id>",
+      "methods": [
+        "POST"
+      ],
+      "function": "teacher_cancel_leave",
+      "role": "teacher",
+      "response": "HTML / redirect",
+      "inputs": {
+        "form": [],
+        "args": [],
+        "files": []
+      },
+      "source": "routes/teacher.py",
+      "line": 374
+    },
+    {
+      "path": "/teacher_dash",
+      "methods": [
+        "GET"
+      ],
+      "function": "teacher_dash",
+      "role": "teacher",
+      "response": "HTML / redirect",
+      "inputs": {
+        "form": [],
+        "args": [
+          "date"
+        ],
+        "files": []
+      },
+      "source": "routes/teacher.py",
+      "line": 184
+    },
+    {
+      "path": "/teacher_notifications",
+      "methods": [
+        "GET"
+      ],
+      "function": "teacher_notifications",
+      "role": "teacher",
+      "response": "HTML / redirect",
+      "inputs": {
+        "form": [],
+        "args": [],
+        "files": []
+      },
+      "source": "routes/teacher.py",
+      "line": 410
+    },
+    {
+      "path": "/teacher_portal",
+      "methods": [
+        "GET"
+      ],
+      "function": "teacher_portal",
+      "role": "public / staged session",
+      "response": "HTML / redirect",
+      "inputs": {
+        "form": [],
+        "args": [
+          "date",
+          "inst_code",
+          "teacher_id"
+        ],
+        "files": []
+      },
+      "source": "routes/teacher.py",
+      "line": 22
+    },
+    {
+      "path": "/teacher_view_class",
+      "methods": [
+        "GET"
+      ],
+      "function": "teacher_view_class",
+      "role": "teacher",
+      "response": "HTML / redirect",
+      "inputs": {
+        "form": [],
+        "args": [
+          "class_id",
+          "date"
+        ],
+        "files": []
+      },
+      "source": "routes/teacher.py",
+      "line": 241
+    },
+    {
+      "path": "/verify_email_update",
+      "methods": [
+        "GET",
+        "POST"
+      ],
+      "function": "verify_email_update",
+      "role": "authenticated role (internal check)",
+      "response": "HTML / redirect",
+      "inputs": {
+        "form": [
+          "otp"
+        ],
+        "args": [],
+        "files": []
+      },
+      "source": "routes/auth.py",
+      "line": 454
+    },
+    {
+      "path": "/verify_reg_otp",
+      "methods": [
+        "GET",
+        "POST"
+      ],
+      "function": "verify_reg_otp",
+      "role": "public / staged session",
+      "response": "HTML / redirect",
+      "inputs": {
+        "form": [
+          "otp"
+        ],
+        "args": [],
+        "files": []
+      },
+      "source": "routes/auth.py",
+      "line": 119
+    },
+    {
+      "path": "/verify_teacher_otp",
+      "methods": [
+        "GET",
+        "POST"
+      ],
+      "function": "verify_teacher_otp",
+      "role": "public / staged session",
+      "response": "HTML / redirect",
+      "inputs": {
+        "form": [
+          "new_password",
+          "otp"
+        ],
+        "args": [],
+        "files": []
+      },
+      "source": "routes/teacher.py",
+      "line": 122
+    },
+    {
+      "path": "/view_timetable",
+      "methods": [
+        "GET"
+      ],
+      "function": "view_timetable",
+      "role": "admin",
+      "response": "HTML / redirect",
+      "inputs": {
+        "form": [],
+        "args": [
+          "class_id",
+          "date"
+        ],
+        "files": []
+      },
+      "source": "routes/admin.py",
+      "line": 722
+    }
+  ]
+}

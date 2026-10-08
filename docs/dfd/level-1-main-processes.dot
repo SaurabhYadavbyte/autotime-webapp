@@ -1,0 +1,84 @@
+digraph AutoTimeLevel1 {
+  graph [
+    rankdir=LR,
+    bgcolor="white",
+    pad="0.35",
+    nodesep="0.80",
+    ranksep="1.05",
+    splines=polyline,
+    fontname="Arial",
+    fontsize=22,
+    fontcolor="black",
+    labelloc=t,
+    label="AutoTime DFD — Level 1 (Main Processes)"
+  ];
+
+  node [
+    shape=box,
+    style="filled",
+    fillcolor="white",
+    color="black",
+    fontcolor="black",
+    fontname="Arial",
+    fontsize=12,
+    penwidth=1.4,
+    margin="0.17,0.12"
+  ];
+
+  edge [
+    color="black",
+    fontcolor="black",
+    fontname="Arial",
+    fontsize=9,
+    penwidth=1.05,
+    arrowsize=0.72
+  ];
+
+  Admin   [label="Admin"];
+  Teacher [label="Teacher"];
+  Student [label="Student"];
+
+  P1 [shape=box, style="rounded,filled", label="1.0\nMaintain Academic\nand Staff Data"];
+  P2 [shape=box, style="rounded,filled", label="2.0\nGenerate Timetable"];
+  P3 [shape=box, style="rounded,filled", label="3.0\nManage Leave\nand Proxy"];
+  P4 [shape=box, style="rounded,filled", label="4.0\nProvide Timetable"];
+
+  D1 [shape=record, label="{D1|Academic and Staff Data}"];
+  D2 [shape=record, label="{D2|Timetable Data}"];
+  D3 [shape=record, label="{D3|Leave and Proxy Data}"];
+
+  { rank=same; Admin; Teacher; Student; }
+  { rank=same; P1; P2; P3; P4; }
+  { rank=same; D1; D2; D3; }
+
+  Admin -> Teacher [style=invis, weight=20];
+  Teacher -> Student [style=invis, weight=20];
+  P1 -> P2 [style=invis, weight=20];
+  P2 -> P3 [style=invis, weight=20];
+  P3 -> P4 [style=invis, weight=20];
+
+  Admin -> P1 [label="Academic data"];
+  P1 -> D1 [label="Validated academic data"];
+
+  Admin -> P2 [label="Generation request"];
+  D1 -> P2 [label="Scheduling requirements"];
+  P2 -> D2 [label="Generated timetable"];
+  P2 -> Admin [label="Generation status"];
+
+  Teacher -> P3 [label="Leave request"];
+  Admin -> P3 [label="Leave decision"];
+  D1 -> P3 [label="Staff data"];
+  D2 -> P3 [label="Affected timetable"];
+  P3 -> D3 [label="Leave/proxy record"];
+  P3 -> D2 [label="Dated proxy update"];
+  P3 -> Admin [label="Leave request"];
+  P3 -> Teacher [label="Leave status; proxy assignment"];
+
+  Admin -> P4 [label="Timetable query"];
+  Teacher -> P4 [label="Timetable query"];
+  Student -> P4 [label="Class timetable query"];
+  D2 -> P4 [label="Current timetable"];
+  P4 -> Admin [label="Admin timetable"];
+  P4 -> Teacher [label="Personal timetable"];
+  P4 -> Student [label="Class timetable"];
+}

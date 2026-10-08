@@ -1,0 +1,27 @@
+digraph G {
+graph [rankdir=LR, bgcolor="white", pad="0.35", nodesep="0.48", ranksep="0.68", fontname="Arial", fontsize=22, fontcolor="#142d4e", labelloc=t, label="DFD Level 0 — AutoTime system boundary", splines=polyline];
+node [shape=box, style="rounded,filled", fillcolor="#f0f6fc", color="#53769d", fontname="Arial", fontsize=13, fontcolor="#173454", margin="0.18,0.12", penwidth=1.2];
+edge [fontname="Arial", fontsize=10, color="#637991", fontcolor="#344e68", arrowsize=0.7, penwidth=1.1];
+
+ A [label="Admin", shape=box, style=filled, fillcolor="#fff1dc"];
+ T [label="Teacher", shape=box, style=filled, fillcolor="#fff1dc"];
+ S [label="Student / public viewer", shape=box, style=filled, fillcolor="#fff1dc"];
+ E [label="SMTP email service", shape=box, style=filled, fillcolor="#e6f5ed"];
+ P [label="0
+AutoTime
+Timetable Management", shape=ellipse, width=3, height=1.5, fillcolor="#dceafd"];
+ A -> P [label="Account details; academic data; settings;
+generation / edit requests; leave decisions"];
+ P -> A [label="Timetables; diagnostics; history;
+notifications; Excel export"];
+ T -> P [label="Credentials / OTP; timetable query;
+leave and profile requests"];
+ P -> T [label="Live timetable; proxy assignments;
+request status; notifications"];
+ S -> P [label="Registration / login; institute and
+class / teacher timetable query"];
+ P -> S [label="Account result; class / public timetable"];
+ P -> E [label="Recipient and OTP email"];
+ E -> P [label="SMTP delivery acceptance / error"];
+ 
+}

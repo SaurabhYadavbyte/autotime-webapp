@@ -1,0 +1,55 @@
+digraph G {
+graph [rankdir=TB, bgcolor="white", pad="0.35", nodesep="0.48", ranksep="0.68", fontname="Arial", fontsize=22, fontcolor="#142d4e", labelloc=t, label="DFD Level 1 — principal processes and data stores", splines=polyline];
+node [shape=box, style="rounded,filled", fillcolor="#f0f6fc", color="#53769d", fontname="Arial", fontsize=13, fontcolor="#173454", margin="0.18,0.12", penwidth=1.2];
+edge [fontname="Arial", fontsize=10, color="#637991", fontcolor="#344e68", arrowsize=0.7, penwidth=1.1];
+
+ A [label="Admin",fillcolor="#fff1dc",style=filled]; T [label="Teacher",fillcolor="#fff1dc",style=filled]; S [label="Student / public viewer",fillcolor="#fff1dc",style=filled]; E [label="SMTP service",fillcolor="#e6f5ed",style=filled];
+ P1 [label="1.0
+Manage identity
+and profile",shape=ellipse];
+ P2 [label="2.0
+Manage academic
+data / settings",shape=ellipse];
+ P3 [label="3.0
+Generate and edit
+master timetable",shape=ellipse];
+ P4 [label="4.0
+Manage leave
+and proxies",shape=ellipse];
+ P5 [label="5.0
+Present timetables
+and exports",shape=ellipse];
+ P6 [label="6.0
+Present history
+and notifications",shape=ellipse];
+ D1 [shape=plain, label=<<TABLE BORDER="1" SIDES="TB" CELLBORDER="0" CELLPADDING="9"><TR><TD>D1 Accounts / profile requests</TD></TR></TABLE>>];
+ D2 [shape=plain, label=<<TABLE BORDER="1" SIDES="TB" CELLBORDER="0" CELLPADDING="9"><TR><TD>D2 Courses / subjects / configuration / calendar</TD></TR></TABLE>>];
+ D3 [shape=plain, label=<<TABLE BORDER="1" SIDES="TB" CELLBORDER="0" CELLPADDING="9"><TR><TD>D3 Master and dated timetable entries</TD></TR></TABLE>>];
+ D4 [shape=plain, label=<<TABLE BORDER="1" SIDES="TB" CELLBORDER="0" CELLPADDING="9"><TR><TD>D4 Teacher leave</TD></TR></TABLE>>];
+ D5 [shape=plain, label=<<TABLE BORDER="1" SIDES="TB" CELLBORDER="0" CELLPADDING="9"><TR><TD>D5 Notifications / generation history</TD></TR></TABLE>>];
+ A -> P1 [label="Account / profile data"]; T -> P1 [label="Credentials / profile data"]; S -> P1 [label="Registration / login"];
+ P1 -> A [label="Account / profile result"]; P1 -> T [label="Account / request result"]; P1 -> S [label="Account result"];
+ P1 -> E [label="OTP email"]; E -> P1 [label="Delivery result"];
+ D1 -> P1 [label="Account records"]; P1 -> D1 [label="Verified account / update request"];
+ P1 -> D5 [label="Profile-request alert"];
+ A -> P2 [label="Master data / settings"]; P2 -> A [label="Saved data / validation"];
+ D1 -> P2 [label="Teacher records"]; P2 -> D1 [label="Teacher changes"];
+ P2 -> D2 [label="Academic changes"]; D2 -> P2 [label="Current data"];
+ A -> P3 [label="Generate / edit request"]; P3 -> A [label="Result / diagnostics"];
+ D1 -> P3 [label="Teacher constraints"]; D2 -> P3 [label="Requirements / slots"];
+ D3 -> P3 [label="Existing slot data"]; P3 -> D3 [label="Validated schedule / slot update"];
+ P3 -> D5 [label="Generation outcome"];
+ T -> P4 [label="Leave / cancellation"]; A -> P4 [label="Approve / reject / revoke"];
+ P4 -> T [label="Request result"]; P4 -> A [label="Decision result / leave status"];
+ P4 -> D4 [label="Leave status"]; D4 -> P4 [label="Current leave"];
+ D1 -> P4 [label="Available teachers"]; D2 -> P4 [label="Eligibility / configuration"];
+ D3 -> P4 [label="Affected slots / workload"]; P4 -> D3 [label="Dated overrides / cleanup"];
+ P4 -> D5 [label="Leave / proxy notifications"];
+ A -> P5 [label="Class query / export"]; T -> P5 [label="Teacher / class query"]; S -> P5 [label="Class / public query"];
+ D3 -> P5 [label="Master + dated rows"]; D2 -> P5 [label="Slots / class details"]; D1 -> P5 [label="Institute / teacher identity"];
+ P5 -> A [label="Timetable / Excel"]; P5 -> T [label="Live timetable / proxy details"]; P5 -> S [label="Timetable"];
+ A -> P6 [label="History / alerts query"]; T -> P6 [label="Alerts query"];
+ D5 -> P6 [label="History / notifications"]; P6 -> D5 [label="Read flags / clear request"];
+ P6 -> A [label="History / alerts"]; P6 -> T [label="Proxy / cancellation alerts"];
+ 
+}

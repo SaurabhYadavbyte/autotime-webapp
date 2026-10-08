@@ -1,0 +1,42 @@
+digraph G {
+graph [rankdir=LR, bgcolor="white", pad="0.35", nodesep="0.48", ranksep="0.68", fontname="Arial", fontsize=22, fontcolor="#142d4e", labelloc=t, label="Use-case diagram — timetable operations", splines=polyline];
+node [shape=box, style="rounded,filled", fillcolor="#f0f6fc", color="#53769d", fontname="Arial", fontsize=13, fontcolor="#173454", margin="0.18,0.12", penwidth=1.2];
+edge [fontname="Arial", fontsize=10, color="#637991", fontcolor="#344e68", arrowsize=0.7, penwidth=1.1];
+
+ node [shape=ellipse]; edge [dir=none];
+ A [shape=box,label="«actor»
+Admin",fillcolor="#fff1dc"];
+ T [shape=box,label="«actor»
+Teacher",fillcolor="#fff1dc"];
+ S [shape=box,label="«actor»
+Student",fillcolor="#fff1dc"];
+ V [shape=box,label="«actor»
+Public viewer",fillcolor="#fff1dc"];
+ subgraph cluster_system { label="AutoTime"; color="#9fb3c8"; style=rounded;
+  master [label="Manage courses, teachers
+and subjects / imports"];
+  config [label="Manage settings
+and calendar"];
+  generate [label="Generate timetable"];
+  audit [label="Validate generated
+assignments"];
+  edit [label="Edit / assign
+timetable slots"];
+  view [label="View class / teacher
+Live Week timetable"];
+  export [label="Export Excel timetable"];
+  history [label="View generation history"];
+  leave [label="Request / cancel leave"];
+  decide [label="Approve leave"];
+  proxy [label="Attempt proxy allocation"];
+  reject [label="Reject / revoke leave"];
+  alerts [label="Read / clear notifications"];
+  own [label="View own class timetable"];
+  public [label="View public timetable"];
+ }
+ A -> master; A -> config; A -> generate; A -> edit; A -> export; A -> history; A -> decide; A -> reject; A -> alerts; A -> view;
+ T -> leave; T -> view; T -> alerts; S -> own; V -> public;
+ generate -> audit [dir=forward,style=dashed,arrowhead=open,label="«include»"];
+ decide -> proxy [dir=forward,style=dashed,arrowhead=open,label="«include»"];
+ 
+}

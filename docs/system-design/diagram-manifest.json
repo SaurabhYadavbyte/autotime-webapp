@@ -1,0 +1,162 @@
+[
+  {
+    "id": "01a-dfd-context",
+    "title": "AutoTime | DFD Level 0 — context",
+    "caption": "External entities exchange data with one AutoTime process. The database is internal and therefore omitted from the context diagram. Public timetable viewers are included because the current portal routes permit them.",
+    "source": "sources/01a-dfd-context.dot",
+    "svg": "diagrams/01a-dfd-context.svg",
+    "png": "diagrams/01a-dfd-context.png",
+    "width": 942,
+    "height": 345
+  },
+  {
+    "id": "01b-dfd-level-1",
+    "title": "AutoTime | DFD Level 1",
+    "caption": "Logical DFD: each store groups existing tables, not a separate database. D1 = institute, teacher, student, teacher_update_request; D2 = course, subject, subject_courses, settings, academic_calendar; D3 = timetable; D4 = teacher_leave; D5 = notification, generation_history.",
+    "source": "sources/01b-dfd-level-1.dot",
+    "svg": "diagrams/01b-dfd-level-1.svg",
+    "png": "diagrams/01b-dfd-level-1.png",
+    "width": 2211,
+    "height": 1134
+  },
+  {
+    "id": "01c-dfd-generation",
+    "title": "AutoTime | Scheduling DFD decomposition",
+    "caption": "The detailed DFD keeps manual editing within process 3.0 and records generation failures without replacing the existing master timetable.",
+    "source": "sources/01c-dfd-generation.dot",
+    "svg": "diagrams/01c-dfd-generation.svg",
+    "png": "diagrams/01c-dfd-generation.png",
+    "width": 1244,
+    "height": 967
+  },
+  {
+    "id": "03a-usecase-operations",
+    "title": "AutoTime | Operational use cases",
+    "caption": "Actors use valid UML rectangle notation with the «actor» stereotype. Admin, teacher and student operations require their corresponding sessions. Public timetable access is a separate implemented use case. PDF creation is client-side and is described in the frontend section.",
+    "source": "sources/03a-usecase-operations.dot",
+    "svg": "diagrams/03a-usecase-operations.svg",
+    "png": "diagrams/03a-usecase-operations.png",
+    "width": 799,
+    "height": 1265
+  },
+  {
+    "id": "03b-usecase-accounts",
+    "title": "AutoTime | Account use cases",
+    "caption": "Authenticated user denotes the shared actions available to signed-in roles; teacher name/email changes create an admin-reviewed request. Admin/student email changes require an OTP when the email changes.",
+    "source": "sources/03b-usecase-accounts.dot",
+    "svg": "diagrams/03b-usecase-accounts.svg",
+    "png": "diagrams/03b-usecase-accounts.png",
+    "width": 865,
+    "height": 994
+  },
+  {
+    "id": "04a-class-domain",
+    "title": "AutoTime | Domain classes",
+    "caption": "Selected attributes of the eight core model classes. Solid associations correspond to declared foreign keys; dashed associations are application-level links with intended cardinalities. Optional 0..1 reflects nullable FK columns. Supporting tables are covered in the complete ER and schema sections. Model classes define persistence fields, not invented business methods.",
+    "source": "sources/04a-class-domain.dot",
+    "svg": "diagrams/04a-class-domain.svg",
+    "png": "diagrams/04a-class-domain.png",
+    "width": 737,
+    "height": 1049
+  },
+  {
+    "id": "04b-class-scheduler",
+    "title": "AutoTime | Scheduler classes",
+    "caption": "Actual classes and representative attributes/methods from utils/scheduler and utils/helpers.py. The timetable adapter and leave service are modules of functions, so they are shown as components in the backend diagram rather than fictional classes.",
+    "source": "sources/04b-class-scheduler.dot",
+    "svg": "diagrams/04b-class-scheduler.svg",
+    "png": "diagrams/04b-class-scheduler.png",
+    "width": 1037,
+    "height": 1124
+  },
+  {
+    "id": "05a-er-physical",
+    "title": "AutoTime | Physical ER diagram",
+    "caption": "Crow-foot notation: circle + crow = zero to many; circle + bar = zero or one; two bars = exactly one. All solid links come directly from models.py. The five tables in the dashed group have logical links documented separately, not enforced foreign keys. Selected columns shown; the data dictionary lists every column.",
+    "source": "sources/05a-er-physical.dot",
+    "svg": "diagrams/05a-er-physical.svg",
+    "png": "diagrams/05a-er-physical.png",
+    "width": 1362,
+    "height": 1053
+  },
+  {
+    "id": "05b-er-logical-links",
+    "title": "AutoTime | Legacy logical relationships",
+    "caption": "Dashed links denote how application queries resolve relationships. They are not database-enforced foreign keys; orphaned legacy values remain possible at the schema level.",
+    "source": "sources/05b-er-logical-links.dot",
+    "svg": "diagrams/05b-er-logical-links.svg",
+    "png": "diagrams/05b-er-logical-links.png",
+    "width": 614,
+    "height": 543
+  },
+  {
+    "id": "06a-activity-generation",
+    "title": "AutoTime | Generation activity",
+    "caption": "Main generation path after entry checks. No feasible assignment, invalid requirements and failed audits retain the existing master rows. Unexpected route exceptions return FAILED with INTERNAL_ERROR; a history row is not guaranteed for those exceptions.",
+    "source": "sources/06a-activity-generation.dot",
+    "svg": "diagrams/06a-activity-generation.svg",
+    "png": "diagrams/06a-activity-generation.png",
+    "width": 593,
+    "height": 1507
+  },
+  {
+    "id": "06b-activity-leave",
+    "title": "AutoTime | Leave and proxy activity",
+    "caption": "Approval does not guarantee a substitute exists: uncovered dated rows hide the absent teacher. Service exceptions roll back the approval transaction. Cancellation/revocation deletes only rows tied to that leave_id and stores Cancelled; approved leave for today/past dates cannot be cancelled.",
+    "source": "sources/06b-activity-leave.dot",
+    "svg": "diagrams/06b-activity-leave.svg",
+    "png": "diagrams/06b-activity-leave.png",
+    "width": 894,
+    "height": 1171
+  },
+  {
+    "id": "08-deployment",
+    "title": "AutoTime | Deployment",
+    "caption": "Repository-configured deployment, not an audit of the live Vercel account. PostgreSQL is the documented production database; local development defaults to SQLite. Database TLS depends on DATABASE_URL/provider configuration and is not asserted here.",
+    "source": "sources/08-deployment.dot",
+    "svg": "diagrams/08-deployment.svg",
+    "png": "diagrams/08-deployment.png",
+    "width": 1412,
+    "height": 390
+  },
+  {
+    "id": "09-frontend-architecture",
+    "title": "AutoTime | Frontend architecture",
+    "caption": "Pages extend the shared Jinja layout; this repository is not a React SPA. PDF export is executed in the browser, while Excel export is returned by Flask. components/timetable.html exists but active inclusion was not found, so it is not shown as an active rendering dependency.",
+    "source": "sources/09-frontend-architecture.dot",
+    "svg": "diagrams/09-frontend-architecture.svg",
+    "png": "diagrams/09-frontend-architecture.png",
+    "width": 1751,
+    "height": 512
+  },
+  {
+    "id": "10-backend-architecture",
+    "title": "AutoTime | Backend architecture",
+    "caption": "A modular Flask application with one blueprint, not separate deployed microservices. The route modules also query models directly; the diagram does not invent a repository layer, task queue, or background worker.",
+    "source": "sources/10-backend-architecture.dot",
+    "svg": "diagrams/10-backend-architecture.svg",
+    "png": "diagrams/10-backend-architecture.png",
+    "width": 1275,
+    "height": 950
+  },
+  {
+    "id": "07a-sequence-generation",
+    "title": "Sequence — generate timetable",
+    "caption": "Invalid requirements skip the engine. Unexpected route exceptions return INTERNAL_ERROR; the final response still normally has HTTP 200. JSON business failure must be checked via success/status.",
+    "source": "sources/07a-sequence-generation.puml",
+    "svg": "diagrams/07a-sequence-generation.svg",
+    "png": "diagrams/07a-sequence-generation.png",
+    "width": 1600,
+    "height": 1278
+  },
+  {
+    "id": "07b-sequence-leave",
+    "title": "Sequence — leave approval and live timetable",
+    "caption": "Admin and teacher requests are distinct HTTP interactions. Every approval groups status and overrides in one database transaction. The adapter merges dated rows over matching weekly master slots before filtering a teacher view.",
+    "source": "sources/07b-sequence-leave.puml",
+    "svg": "diagrams/07b-sequence-leave.svg",
+    "png": "diagrams/07b-sequence-leave.png",
+    "width": 1600,
+    "height": 1574
+  }
+]

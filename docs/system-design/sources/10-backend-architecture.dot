@@ -1,0 +1,50 @@
+digraph G {
+graph [rankdir=TB, bgcolor="white", pad="0.35", nodesep="0.48", ranksep="0.68", fontname="Arial", fontsize=22, fontcolor="#142d4e", labelloc=t, label="Backend architecture — Flask modules and persistence", splines=polyline];
+node [shape=box, style="rounded,filled", fillcolor="#f0f6fc", color="#53769d", fontname="Arial", fontsize=13, fontcolor="#173454", margin="0.18,0.12", penwidth=1.2];
+edge [fontname="Arial", fontsize=10, color="#637991", fontcolor="#344e68", arrowsize=0.7, penwidth=1.1];
+
+ http [label="HTTP request",fillcolor="#fff1dc"];
+ factory [label="app.py / create_app()
+Configuration; SQLAlchemy; healthz"];
+ security [label="utils/security.py
+CSRF validation; session setup; headers"];
+ bp [label="routes/blueprint.py
+Single main_bp blueprint"];
+ auth [label="routes/auth.py
+Accounts / OTP / settings"];
+ admin [label="routes/admin.py
+Master data; generation; editing;
+leave decisions; Excel export"];
+ teacher [label="routes/teacher.py
+Activation; views; leave; alerts"];
+ student [label="routes/student.py
+Registration; public / private views"];
+ guards [label="utils/decorators.py
+Role session guards"];
+ adapter [label="utils/timetable_adapter.py
+ORM ↔ scheduling objects
+Master + dated Live Week merge"];
+ engine [label="utils/scheduler/
+core / engine / validator / diagnostics"];
+ leave [label="utils/leave_service.py
+Approve / cancel; atomic proxy changes"];
+ proxy [label="utils/proxy_engine.py
+Eligibility and ranked proxy selection"];
+ helpers [label="utils/helpers.py + timetable_helpers.py
+ScheduleConfig; OTP / SMTP; view model"];
+ models [label="models.py
+13 SQLAlchemy models / tables"];
+ db [shape=cylinder,label="PostgreSQL (production)
+SQLite fallback (local)",fillcolor="#e6f5ed"];
+ view [label="Jinja templates / JSON / file response"];
+ http -> factory -> security -> bp;
+ bp -> auth; bp -> admin; bp -> teacher; bp -> student;
+ guards -> admin [style=dashed]; guards -> teacher [style=dashed]; guards -> student [style=dashed];
+ admin -> adapter; teacher -> adapter; student -> adapter;
+ admin -> leave; teacher -> leave; leave -> proxy;
+ adapter -> engine; adapter -> models; leave -> models; proxy -> models;
+ auth -> helpers; admin -> helpers; teacher -> helpers; student -> helpers;
+ auth -> models; admin -> models; teacher -> models; student -> models;
+ models -> db; auth -> view; admin -> view; teacher -> view; student -> view;
+ 
+}

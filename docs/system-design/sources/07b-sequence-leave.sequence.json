@@ -1,0 +1,126 @@
+{
+  "title": "Sequence — leave approval and live timetable",
+  "actors": [
+    "Teacher browser",
+    "Flask routes",
+    "Admin browser",
+    "Leave / proxy modules",
+    "Database"
+  ],
+  "steps": [
+    {
+      "from": 0,
+      "to": 1,
+      "text": "POST /apply_leave + form / CSRF"
+    },
+    {
+      "from": 1,
+      "to": 4,
+      "text": "Create Pending leave + admin notification; commit"
+    },
+    {
+      "from": 1,
+      "to": 0,
+      "text": "Redirect to teacher dashboard",
+      "reply": true
+    },
+    {
+      "from": 2,
+      "to": 1,
+      "text": "POST /admin/approve_leave/<leave_id>"
+    },
+    {
+      "from": 1,
+      "to": 3,
+      "text": "approve_leave(leave_id, institute_code)"
+    },
+    {
+      "from": 3,
+      "to": 4,
+      "text": "Load Pending leave; stage Approved status"
+    },
+    {
+      "from": 3,
+      "to": 4,
+      "text": "Read affected master blocks, teachers and workload"
+    },
+    {
+      "from": 4,
+      "to": 3,
+      "text": "Session blocks and candidate information",
+      "reply": true
+    },
+    {
+      "frame": "loop",
+      "text": "[for every affected session block]"
+    },
+    {
+      "from": 3,
+      "to": 3,
+      "text": "find_best_proxy(...)"
+    },
+    {
+      "frame": "alt",
+      "text": "[eligible proxy found]"
+    },
+    {
+      "from": 3,
+      "to": 4,
+      "text": "Stage dated proxy rows + teacher notification"
+    },
+    {
+      "branch": "[no eligible proxy]"
+    },
+    {
+      "from": 3,
+      "to": 4,
+      "text": "Stage dated __UNCOVERED__ rows"
+    },
+    {
+      "end": true
+    },
+    {
+      "end": true
+    },
+    {
+      "from": 3,
+      "to": 4,
+      "text": "Commit approved leave and all overrides"
+    },
+    {
+      "from": 3,
+      "to": 1,
+      "text": "Success / message (rollback on exception)",
+      "reply": true
+    },
+    {
+      "from": 1,
+      "to": 2,
+      "text": "Redirect to leave requests",
+      "reply": true
+    },
+    {
+      "from": 0,
+      "to": 1,
+      "text": "GET /teacher_dash"
+    },
+    {
+      "from": 1,
+      "to": 4,
+      "text": "Read master and current-week dated entries"
+    },
+    {
+      "from": 4,
+      "to": 1,
+      "text": "Rows for effective schedule merge",
+      "reply": true
+    },
+    {
+      "from": 1,
+      "to": 0,
+      "text": "Rendered Live Week timetable",
+      "reply": true
+    }
+  ],
+  "caption": "Admin and teacher requests are distinct HTTP interactions. Every approval groups status and overrides in one database transaction. The adapter merges dated rows over matching weekly master slots before filtering a teacher view."
+}

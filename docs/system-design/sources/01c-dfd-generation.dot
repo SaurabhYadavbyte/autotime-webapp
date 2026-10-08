@@ -1,0 +1,32 @@
+digraph G {
+graph [rankdir=TB, bgcolor="white", pad="0.35", nodesep="0.48", ranksep="0.68", fontname="Arial", fontsize=22, fontcolor="#142d4e", labelloc=t, label="DFD Level 2 — decompose process 3.0", splines=polyline];
+node [shape=box, style="rounded,filled", fillcolor="#f0f6fc", color="#53769d", fontname="Arial", fontsize=13, fontcolor="#173454", margin="0.18,0.12", penwidth=1.2];
+edge [fontname="Arial", fontsize=10, color="#637991", fontcolor="#344e68", arrowsize=0.7, penwidth=1.1];
+
+ A [label="Admin",style=filled,fillcolor="#fff1dc"];
+ D1 [shape=plain, label=<<TABLE BORDER="1" SIDES="TB" CELLBORDER="0" CELLPADDING="9"><TR><TD>D1 Accounts / teachers</TD></TR></TABLE>>]; D2 [shape=plain, label=<<TABLE BORDER="1" SIDES="TB" CELLBORDER="0" CELLPADDING="9"><TR><TD>D2 Academic data / configuration</TD></TR></TABLE>>];
+ D3 [shape=plain, label=<<TABLE BORDER="1" SIDES="TB" CELLBORDER="0" CELLPADDING="9"><TR><TD>D3 Timetable</TD></TR></TABLE>>]; D5 [shape=plain, label=<<TABLE BORDER="1" SIDES="TB" CELLBORDER="0" CELLPADDING="9"><TR><TD>D5 Generation history</TD></TR></TABLE>>];
+ R [label="3.1
+Read requirements
+and construct sessions",shape=ellipse];
+ C [label="3.2
+Check feasibility
+and find assignments",shape=ellipse];
+ V [label="3.3
+Optimize and
+audit assignments",shape=ellipse];
+ W [label="3.4
+Persist outcome",shape=ellipse];
+ M [label="3.5
+Validate and apply
+manual slot change",shape=ellipse];
+ A -> R [label="Generation request"]; D1 -> R [label="Teacher constraints"]; D2 -> R [label="Subjects / classes / slots"];
+ R -> C [label="Valid session occurrences"]; R -> W [label="Invalid-requirement diagnostics"];
+ C -> V [label="Feasible assignment"]; C -> W [label="Failure / timeout diagnostics"];
+ V -> W [label="Audited result / validation failure"];
+ W -> D3 [label="Successful master replacement only"]; W -> D5 [label="Success / failure record"];
+ W -> A [label="Outcome and diagnostics"];
+ A -> M [label="Edit / assignment request"]; D1 -> M [label="Teacher identity"]; D2 -> M [label="Class / subject / slot details"]; D3 -> M [label="Current slots / conflicts"];
+ M -> D3 [label="Accepted slot update"]; M -> A [label="Result / validation feedback"];
+ 
+}

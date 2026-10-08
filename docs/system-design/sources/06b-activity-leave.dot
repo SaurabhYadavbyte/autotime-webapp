@@ -1,0 +1,35 @@
+digraph G {
+graph [rankdir=TB, bgcolor="white", pad="0.35", nodesep="0.48", ranksep="0.68", fontname="Arial", fontsize=22, fontcolor="#142d4e", labelloc=t, label="Activity diagram — leave approval and proxy assignment", splines=polyline];
+node [shape=box, style="rounded,filled", fillcolor="#f0f6fc", color="#53769d", fontname="Arial", fontsize=13, fontcolor="#173454", margin="0.18,0.12", penwidth=1.2];
+edge [fontname="Arial", fontsize=10, color="#637991", fontcolor="#344e68", arrowsize=0.7, penwidth=1.1];
+
+ start [shape=circle,label="",style=filled,fillcolor="#173454",width=0.2]; end [shape=doublecircle,label="",style=filled,fillcolor="#173454",width=0.2];
+ submit [label="Teacher submits valid leave request"];
+ pending [label="Save Pending leave
+and admin notification"];
+ decision [shape=diamond,label="Admin
+decision?"];
+ reject [label="Save Rejected status",fillcolor="#fff1dc"];
+ approve [label="Stage Approved status"];
+ affected [label="Find affected master-session blocks"];
+ more [shape=diamond,label="More affected
+blocks?"];
+ pick [label="Rank eligible proxy teachers:
+class / department; subject; workload"];
+ available [shape=diamond,label="Proxy
+available?"];
+ proxy [label="Stage dated proxy rows
+and teacher notification",fillcolor="#e6f5ed"];
+ uncovered [label="Stage dated __UNCOVERED__ rows",fillcolor="#fff1dc"];
+ commit [label="Commit status and overrides together"];
+ view [label="Live Week merges dated rows
+over matching master slots"];
+ start -> submit -> pending -> decision;
+ decision -> reject [label="[reject]"]; reject -> end;
+ decision -> approve [label="[approve]"]; approve -> affected -> more;
+ more -> pick [label="[yes]"]; pick -> available;
+ available -> proxy [label="[yes]"]; available -> uncovered [label="[no]"];
+ proxy -> more; uncovered -> more; more -> commit [label="[no]"];
+ commit -> view -> end;
+ 
+}

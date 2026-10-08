@@ -1,0 +1,41 @@
+digraph G {
+graph [rankdir=TB, bgcolor="white", pad="0.35", nodesep="0.48", ranksep="0.68", fontname="Arial", fontsize=22, fontcolor="#142d4e", labelloc=t, label="Frontend architecture — server-rendered pages with JavaScript", splines=polyline];
+node [shape=box, style="rounded,filled", fillcolor="#f0f6fc", color="#53769d", fontname="Arial", fontsize=13, fontcolor="#173454", margin="0.18,0.12", penwidth=1.2];
+edge [fontname="Arial", fontsize=10, color="#637991", fontcolor="#344e68", arrowsize=0.7, penwidth=1.1];
+
+ route [label="Flask route handlers
+render_template(context)",fillcolor="#e6f5ed"];
+ base [label="Jinja shared/base.html
+Role navigation; theme; CSRF meta; flash UI"];
+ roles [label="Page templates
+auth / admin / teacher / student / shared"];
+ component [label="Reusable components
+public_navbar.html
+Timetable view-model: days_data"];
+ browser [label="Browser DOM",fillcolor="#fff1dc"];
+ ui [label="Bootstrap 5 + icons + Inter
+Tom Select; Turbo navigation"];
+ global [label="static/js/main.js + base scripts
+CSRF form fields; theme; loaders;
+toasts; sidebar preferences"];
+ page [label="Page-level JavaScript
+Generation fetch; class lookup
+slot forms; PDF export"];
+ api [label="JSON endpoints
+/api/generate_timetable
+/api/get_classes/<inst_code>
+/api/get_slot_data"];
+ styles [label="static/style.css + loader.css
+Responsive layouts and styling"];
+ local [shape=cylinder,label="Browser localStorage
+theme / sidebar preferences"];
+ pdf [label="Local PDF output
+Teacher: html2pdf.js
+Student: window.print()"];
+ route -> base [label="renders"]; base -> roles [label="content blocks"]; base -> component [label="includes / context"];
+ roles -> browser [label="HTML response"]; component -> browser;
+ styles -> browser; ui -> browser; global -> browser; page -> browser;
+ global -> local [label="read / write",dir=both]; browser -> route [label="GET / POST forms + session cookie"];
+ page -> api [label="fetch / JSON"]; page -> pdf;
+ 
+}

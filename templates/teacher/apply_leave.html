@@ -37,6 +37,52 @@
                 </div>
             </div>
         </div>
+
+        <div class="col-md-6">
+            <div class="card border-0 border-top border-info border-4 shadow-sm mb-4">
+                <div class="card-body p-4 bg-light-custom">
+                    <h5 class="fw-bold mb-3 text-dark"><i class="bi bi-hourglass-split text-info me-2"></i> Pending Leave Requests</h5>
+                    {% if pending_leaves %}
+                    <div class="table-responsive">
+                        <table class="table table-hover align-middle">
+                            <thead class="table-light">
+                                <tr>
+                                    <th>Date</th>
+                                    <th>Slot</th>
+                                    <th class="text-end">Action</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for leave in pending_leaves %}
+                                <tr>
+                                    <td>{{ leave.date.strftime('%d %b %Y') }}</td>
+                                    <td>
+                                        {% if leave.start_time == 'ALL' %}
+                                            <span class="badge bg-secondary">All Day</span>
+                                        {% else %}
+                                            <span class="badge bg-primary">{{ leave.start_time }}</span>
+                                        {% endif %}
+                                    </td>
+                                    <td class="text-end">
+                                        <form action="/teacher/cancel_leave/{{ leave.id }}" method="POST" class="d-inline" onsubmit="return confirm('Are you sure you want to revoke this leave request?');">
+                                            <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+                                            <button type="submit" class="btn btn-sm btn-outline-danger"><i class="bi bi-x-circle me-1"></i> Revoke</button>
+                                        </form>
+                                    </td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                    {% else %}
+                    <div class="text-muted text-center py-4">
+                        <i class="bi bi-inbox fs-2 d-block mb-2 text-secondary"></i>
+                        <p class="mb-0">No pending leave requests.</p>
+                    </div>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
     </div>
 </div>
 {% endblock %}

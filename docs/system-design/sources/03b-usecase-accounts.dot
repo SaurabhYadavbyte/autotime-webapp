@@ -1,0 +1,38 @@
+digraph G {
+graph [rankdir=LR, bgcolor="white", pad="0.35", nodesep="0.48", ranksep="0.68", fontname="Arial", fontsize=22, fontcolor="#142d4e", labelloc=t, label="Use-case diagram — accounts and profile management", splines=polyline];
+node [shape=box, style="rounded,filled", fillcolor="#f0f6fc", color="#53769d", fontname="Arial", fontsize=13, fontcolor="#173454", margin="0.18,0.12", penwidth=1.2];
+edge [fontname="Arial", fontsize=10, color="#637991", fontcolor="#344e68", arrowsize=0.7, penwidth=1.1];
+
+ node [shape=ellipse]; edge [dir=none];
+ V [shape=box,label="«actor»
+Visitor / account applicant",fillcolor="#fff1dc"];
+ U [shape=box,label="«actor»
+Authenticated user",fillcolor="#fff1dc"];
+ T [shape=box,label="«actor»
+Teacher",fillcolor="#fff1dc"];
+ A [shape=box,label="«actor»
+Admin",fillcolor="#fff1dc"];
+ E [shape=box,label="«actor»
+Email service",fillcolor="#e6f5ed"];
+ subgraph cluster_system {label="AutoTime";color="#9fb3c8";style=rounded;
+  reg [label="Register institute / student"];
+  act [label="Activate existing teacher account"];
+  otp [label="Verify email OTP"];
+  login [label="Log in"];
+  reset [label="Reset forgotten password"];
+  profile [label="Update own profile"];
+  request [label="Request teacher profile update"];
+  approve [label="Approve / reject profile request"];
+  pass [label="Change password"];
+  remove [label="Delete own account"];
+  logout [label="Log out"];
+ }
+ V -> reg; V -> act; V -> login; V -> reset;
+ U -> profile; U -> pass; U -> remove; U -> logout;
+ T -> request; A -> approve; E -> otp;
+ reg -> otp [dir=forward,style=dashed,arrowhead=open,label="«include»"];
+ act -> otp [dir=forward,style=dashed,arrowhead=open,label="«include»"];
+ reset -> otp [dir=forward,style=dashed,arrowhead=open,label="«include»"];
+ remove -> otp [dir=forward,style=dashed,arrowhead=open,label="«include»"];
+ 
+}

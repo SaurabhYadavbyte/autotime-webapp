@@ -57,6 +57,10 @@
                         <datalist id="deptOpts">{% for d in depts %}<option value="{{ d }}">{% endfor %}</datalist>
                     </div>
                     <div class="mb-3">
+                        <label class="form-label">Subjects Taught</label>
+                        <input type="text" class="form-control" name="subjects" placeholder="Comma-separated e.g. Math, Physics">
+                    </div>
+                    <div class="mb-3">
                         <label class="form-label">Available Days</label>
                         <div class="d-flex flex-wrap gap-2 p-2 bg-surface border rounded">
                             {% for day in ['Mon','Tue','Wed','Thu','Fri','Sat'] %}
@@ -73,7 +77,7 @@
                     {% elif manage_type == 'subject' %}
                     <div class="row g-2">
                         <div class="col-4 mb-3"><label class="form-label">Code</label><input type="text" class="form-control" name="subject_code" required></div>
-                        <div class="col-8 mb-3"><label class="form-label">Subject Name</label><input type="text" class="form-control" name="subject_name" required></div>
+                        <div class="col-8 mb-3"><label class="form-label">Subject Name</label><input type="text" class="form-control" id="subject_name_input" name="subject_name" required></div>
                     </div>
                     <div class="mb-3">
                         <label class="form-label">Assign Class <span class="text-muted small">(Ctrl for multiple)</span></label>
@@ -83,9 +87,9 @@
                     </div>
                     <div class="mb-3">
                         <label class="form-label">Assign Teacher</label>
-                        <select class="form-select searchable-select" name="teacher_id" required>
+                        <select class="form-select searchable-select" id="assign_teacher_select" name="teacher_id" required>
                             <option value="" selected disabled>Select Teacher...</option>
-                            {% for t in teachers %}<option value="{{ t.teacher_id }}">{{ t.name }}</option>{% endfor %}
+                            {% for t in teachers %}<option value="{{ t.teacher_id }}" data-subjects="{{ t.subjects or '' }}">{{ t.name }}</option>{% endfor %}
                         </select>
                     </div>
                     <div class="row g-2">
@@ -150,7 +154,7 @@
                         {% if manage_type == 'course' %}
                         <strong>Required:</strong> class_id, department, semester, division
                         {% elif manage_type == 'teacher' %}
-                        <strong>Required:</strong> teacher_id, name, email, departments, max_hours, available_days
+                        <strong>Required:</strong> teacher_id, name, email, departments, subjects, max_hours, available_days
                         {% elif manage_type == 'subject' %}
                         <strong>Required:</strong> subject_code, subject_name, class_id, teacher_id, subject_type, total_course_hours, session_length
                         {% endif %}
@@ -204,7 +208,7 @@
                                     {% if manage_type == 'course' %}
                                     <th>Class ID</th><th>Dept</th><th>Sem</th><th>Div</th>
                                     {% elif manage_type == 'teacher' %}
-                                    <th>ID</th><th>Name & Email</th><th>Dept</th><th>Days</th>
+                                    <th>ID</th><th>Name & Email</th><th>Dept</th><th>Subjects</th><th>Days</th>
                                     {% elif manage_type == 'subject' %}
                                     <th>Code</th><th>Subject</th><th>Classes</th><th>Teacher</th><th>Total Hrs</th>
                                     {% endif %}
@@ -223,6 +227,7 @@
                                 <td class="fw-bold">{{ item.teacher_id }}</td>
                                 <td><div class="fw-semibold">{{ item.name }}</div><small class="text-muted-custom">{{ item.email }}</small></td>
                                 <td><span class="badge bg-surface text-main border">{{ item.departments }}</span></td>
+                                <td><span class="badge bg-light text-dark border">{{ item.subjects or '' }}</span></td>
                                 <td><small class="text-muted-custom">{{ item.available_days }}</small></td>
                                 {% elif manage_type == 'subject' %}
                                 <td class="fw-bold">{{ item.subject_code }}</td>
@@ -318,6 +323,32 @@
                 });
                 updateBtnState();
                 if(selectAll) selectAll.checked = false;
+            });
+        }
+        const subjectNameInput = document.getElementById('subject_name_input');
+        const assignTeacherSelect = document.getElementById('assign_teacher_select');
+        if (subjectNameInput && assignTeacherSelect) {
+            // Keep a copy of all options to restore them
+            const allTeacherOptions = Array.from(assignTeacherSelect.options).slice(1); // skip the disabled "Select Teacher..."
+            
+            subjectNameInput.addEventListener('input', function() {
+                const typedSubject = this.value.trim().toLowerCase();
+                
+                // Clear existing options except the first placeholder
+                assignTeacherSelect.innerHTML = '';
+                const placeholderOpt = document.createElement('option');
+                placeholderOpt.value = "";
+                placeholderOpt.textContent = "Select Teacher...";
+                placeholderOpt.disabled = true;
+                placeholderOpt.selected = true;
+                assignTeacherSelect.appendChild(placeholderOpt);
+                
+                allTeacherOptions.forEach(opt => {
+                    const teacherSubjects = (opt.getAttribute('data-subjects') || '').toLowerCase();
+                    if (!typedSubject || teacherSubjects.includes(typedSubject)) {
+                        assignTeacherSelect.appendChild(opt.cloneNode(true));
+                    }
+                });
             });
         }
     })();

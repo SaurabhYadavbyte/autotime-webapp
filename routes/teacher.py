@@ -296,12 +296,21 @@ def teacher_view_class():
 def apply_leave():
     if request.method == "GET":
         inst_code = session["institute_code"]
+        t_id = session.get("teacher_id")
         time_slots = get_dynamic_time_slots(inst_code)
         today_date = datetime.now().strftime("%Y-%m-%d")
+        
+        pending_leaves = TeacherLeave.query.filter_by(
+            institute_code=inst_code,
+            teacher_id=t_id,
+            status="Pending"
+        ).order_by(TeacherLeave.date).all()
+        
         return render_template(
             "teacher/apply_leave.html",
             time_slots=time_slots,
             today_date=today_date,
+            pending_leaves=pending_leaves,
             title="Apply Leave",
         )
 

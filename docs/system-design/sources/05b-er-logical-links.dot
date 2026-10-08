@@ -1,0 +1,24 @@
+digraph G {
+graph [rankdir=LR, bgcolor="white", pad="0.35", nodesep="0.48", ranksep="0.68", fontname="Arial", fontsize=22, fontcolor="#142d4e", labelloc=t, label="ER companion — application-level relationships", splines=polyline];
+node [shape=box, style="rounded,filled", fillcolor="#f0f6fc", color="#53769d", fontname="Arial", fontsize=13, fontcolor="#173454", margin="0.18,0.12", penwidth=1.2];
+edge [fontname="Arial", fontsize=10, color="#637991", fontcolor="#344e68", arrowsize=0.7, penwidth=1.1];
+
+ I [label="institute
+institute_code"];
+ T [label="teacher
+(institute_code, teacher_id)"];
+ C [label="course
+(institute_code, class_id)"];
+ S [label="student"]; ST [label="settings"]; AC [label="academic_calendar"];
+ L [label="teacher_leave"]; R [label="teacher_update_request"]; N [label="notification"];
+ edge [style=dashed,dir=none];
+ I -> S [label="institute_code"]; I -> ST [label="institute_code"]; I -> AC [label="institute_code"];
+ C -> S [label="institute_code + class_id"];
+ T -> L [label="institute_code + teacher_id"];
+ T -> R [label="institute_code + teacher_id"];
+ T -> N [label="teacher recipient:
+institute_code + user_id = teacher_id"];
+ I -> N [label="admin recipient:
+institute_code + user_type = admin"];
+ 
+}

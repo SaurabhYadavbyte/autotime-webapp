@@ -1,0 +1,60 @@
+digraph AutoTimeLevel0 {
+  graph [
+    rankdir=LR,
+    bgcolor="white",
+    pad="0.35",
+    nodesep="0.75",
+    ranksep="1.15",
+    splines=polyline,
+    fontname="Arial",
+    fontsize=22,
+    fontcolor="black",
+    labelloc=t,
+    label="AutoTime DFD — Level 0 (Context Diagram)"
+  ];
+
+  node [
+    shape=box,
+    style="filled",
+    fillcolor="white",
+    color="black",
+    fontcolor="black",
+    fontname="Arial",
+    fontsize=13,
+    penwidth=1.4,
+    margin="0.20,0.14"
+  ];
+
+  edge [
+    color="black",
+    fontcolor="black",
+    fontname="Arial",
+    fontsize=10,
+    penwidth=1.1,
+    arrowsize=0.75
+  ];
+
+  Admin   [label="Admin"];
+  Teacher [label="Teacher"];
+  Student [label="Student"];
+
+  AutoTime [
+    shape=Mrecord,
+    width=3.15,
+    height=1.35,
+    label="{0|AutoTime\nTimetable Management System}"
+  ];
+
+  { rank=same; Admin; Teacher; Student; }
+  Admin -> Teacher [style=invis, weight=8];
+  Teacher -> Student [style=invis, weight=8];
+
+  Admin -> AutoTime [label="Academic data; generation request;\nleave decision; timetable query"];
+  AutoTime -> Admin [label="Generation status; leave request;\nadmin timetable"];
+
+  Teacher -> AutoTime [label="Leave request; timetable query"];
+  AutoTime -> Teacher [label="Leave status; proxy assignment;\npersonal timetable"];
+
+  Student -> AutoTime [label="Class timetable query"];
+  AutoTime -> Student [label="Class timetable"];
+}

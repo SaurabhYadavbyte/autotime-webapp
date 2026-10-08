@@ -1,0 +1,30 @@
+@startuml
+title Sequence — generate timetable
+hide footbox
+skinparam backgroundColor white
+skinparam sequenceMessageAlign center
+participant "Admin browser" as P0
+participant "Flask route" as P1
+participant "Timetable adapter" as P2
+participant "Engine / validator" as P3
+participant "Database" as P4
+P0 -> P1: POST /api/generate_timetable + session / CSRF
+P1 -> P1: Check CSRF and admin session
+P1 -> P2: engine_generate_timetable(institute_code)
+P2 -> P4: Read institute, subjects, teachers, courses, settings
+P4 --> P2: Academic data and constraints
+P2 -> P2: Build time slots and session occurrences
+P2 -> P3: generate(units, state)
+note over P2, P3: Only when weekly requirements are valid
+P3 --> P2: success, schedule, message, stats, diagnostics
+P2 -> P3: TimetableValidator.audit(...)
+note over P2, P3: Only after engine success
+P3 --> P2: Audit result / errors
+alt [generation and audit succeed]
+P2 -> P4: Replace master rows; add SUCCESS history; commit
+else [requirements / generation / audit fail]
+P2 -> P4: Keep master; add FAILED history; commit
+end
+P2 --> P1: Result dictionary
+P1 --> P0: HTTP 200 JSON; inspect success / status
+@enduml

@@ -1,0 +1,33 @@
+digraph G {
+graph [rankdir=LR, bgcolor="white", pad="0.35", nodesep="0.48", ranksep="0.68", fontname="Arial", fontsize=22, fontcolor="#142d4e", labelloc=t, label="Deployment diagram — configuration in this repository", splines=polyline];
+node [shape=box, style="rounded,filled", fillcolor="#f0f6fc", color="#53769d", fontname="Arial", fontsize=13, fontcolor="#173454", margin="0.18,0.12", penwidth=1.2];
+edge [fontname="Arial", fontsize=10, color="#637991", fontcolor="#344e68", arrowsize=0.7, penwidth=1.1];
+
+ browser [shape=box3d,label="«device» User computer / phone
+«executionEnvironment» Web browser
+HTML / CSS / JavaScript",fillcolor="#fff1dc"];
+ subgraph cluster_vercel {label="«node» Vercel deployment";color="#89a4c0";style=rounded;
+ edgeRouter [shape=component,label="Configured request routing
+vercel.json: /(.*) → app.py"];
+ runtime [shape=box3d,label="«executionEnvironment»
+Python function / Flask app"];
+ app [shape=note,label="«artifact» app.py + routes + utils
+models.py + templates + static"];
+ runtime -> app [style=dashed,label="hosts"];
+ edgeRouter -> runtime [label="forward request"];
+ }
+ pg [shape=cylinder,label="«database» PostgreSQL
+Supabase per project README
+Persistent application tables",fillcolor="#e6f5ed"];
+ smtp [shape=box3d,label="«external service» Gmail SMTP
+smtp.gmail.com:465"];
+ cdn [shape=box3d,label="«external service» Frontend CDNs
+Bootstrap / Turbo / Tom Select
+fonts / html2pdf.js"];
+ browser -> edgeRouter [label="HTTPS requests / responses",dir=both];
+ runtime -> pg [label="SQLAlchemy + psycopg2
+DATABASE_URL connection",dir=both];
+ runtime -> smtp [label="SMTP over SSL / OTP mail"];
+ browser -> cdn [label="HTTPS asset requests"];
+ 
+}

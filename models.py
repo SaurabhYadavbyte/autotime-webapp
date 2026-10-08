@@ -48,6 +48,7 @@ class Teacher(db.Model):
     name = db.Column(db.String(100), nullable=False)
     email = db.Column(db.String(100), unique=True, nullable=False)
     departments = db.Column(db.String(100), nullable=False)
+    subjects = db.Column(db.String(500), nullable=True)
     available_days = db.Column(db.String(100), nullable=False)
     max_hours = db.Column(db.Integer, nullable=False)
     password = db.Column(db.String(255), nullable=True)
